@@ -27,3 +27,8 @@ CREATE TABLE HistoryLoginEmployee (
 		REFERENCES Employees(idemp)
 		ON DELETE CASCADE ON UPDATE RESTRICT 
 );
+
+insert into Employees VALUES(1,'Jan','Kollar','kollar@pobox.sk','C');
+insert into Employees VALUES(2,'Daniel','Molnar','molnar@pobox.sk','C');
+insert into loginemployee values(1,1,'kollar','kollar');
+insert into loginemployee values(2,2,'molnar','molnar');
