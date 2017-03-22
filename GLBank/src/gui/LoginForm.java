@@ -18,6 +18,7 @@ public class LoginForm extends javax.swing.JFrame {
      */
     public LoginForm() {
         initComponents();
+        setLocationRelativeTo(null);
         lblErrorMessage.setVisible(false);
     }
 
@@ -57,6 +58,7 @@ public class LoginForm extends javax.swing.JFrame {
             }
         });
 
+        lblErrorMessage.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         lblErrorMessage.setForeground(new java.awt.Color(255, 0, 0));
         lblErrorMessage.setText("Incorrect login information");
 
@@ -80,11 +82,11 @@ public class LoginForm extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(132, 132, 132)
                 .addComponent(jLabel1)
-                .addGap(39, 39, 39))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 108, Short.MAX_VALUE)
+                .addContainerGap(91, Short.MAX_VALUE)
                 .addComponent(lblErrorMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(70, 70, 70))
+                .addGap(87, 87, 87))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -125,6 +127,9 @@ public class LoginForm extends javax.swing.JFrame {
                 int id = conn.getEmployeeId(login);
                 conn.logEmployeeAccess(id);
                 lblErrorMessage.setVisible(false);
+                MainForm mainForm = new MainForm(id);
+                this.setVisible(false);
+                mainForm.setVisible(true);
             }else{
                 System.out.println("Incorrect password.");
                 lblErrorMessage.setVisible(true);

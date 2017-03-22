@@ -50,51 +50,69 @@ public class ConnectionProviderTest {
         boolean expResult = true;
         boolean result = instance.isEmployeePasswordValid(username, password);
         assertEquals(expResult, result);
-
     }
     
+    @Test
     public void testIsEmployeePasswordValid2() {
         System.out.println("isEmployeePasswordValid");
-        String username = "molnar";
-        String password = "Molnar";
+        String username = "molnarr";
+        String password = "molnar";
         ConnectionProvider instance = new ConnectionProvider();
         boolean expResult = false;
         boolean result = instance.isEmployeePasswordValid(username, password);
         assertEquals(expResult, result);
-
     }
 
     /**
      * Test of getEmployeeId method, of class ConnectionProvider.
      */
     @Test
-    public void testGetEmployeeId() {
+    public void testGetEmployeeId1() {
         System.out.println("getEmployeeId");
-        String username = "";
+        String username = "kollar";
         ConnectionProvider instance = new ConnectionProvider();
-        int expResult = 0;
+        int expResult = 1;
         int result = instance.getEmployeeId(username);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    }
+    
+    @Test
+    public void testGetEmployeeId2() {
+        System.out.println("getEmployeeId");
+        String username = "molnar";
+        ConnectionProvider instance = new ConnectionProvider();
+        int expResult = 2;
+        int result = instance.getEmployeeId(username);
+        assertEquals(expResult, result);
+    }
+    
+    @Test
+    public void testGetEmployeeId3() {
+        System.out.println("getEmployeeId");
+        String username = "Molnar";
+        ConnectionProvider instance = new ConnectionProvider();
+        int expResult = -1;
+        int result = instance.getEmployeeId(username);
+        assertEquals(expResult, result);
     }
 
     /**
      * Test of logEmployeeAccess method, of class ConnectionProvider.
      */
+    /*
     @Test
     public void testLogEmployeeAccess() {
         System.out.println("logEmployeeAccess");
-        int id = 0;
+        int id = 2;
         ConnectionProvider instance = new ConnectionProvider();
         instance.logEmployeeAccess(id);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
 
+    }
+    */
     /**
      * Test of getDateTime method, of class ConnectionProvider.
      */
+    /*
     @Test
     public void testGetDateTime() {
         System.out.println("getDateTime");
@@ -102,23 +120,35 @@ public class ConnectionProviderTest {
         String expResult = "";
         String result = instance.getDateTime();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
 
+    }
+    */
     /**
      * Test of getEmployee method, of class ConnectionProvider.
      */
     @Test
-    public void testGetEmployee() {
+    public void testGetEmployee1() {
         System.out.println("getEmployee");
-        int id = 0;
+        int id = 1;
         ConnectionProvider instance = new ConnectionProvider();
-        Employee expResult = null;
         Employee result = instance.getEmployee(id);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals("Jan", result.getFirstname());
+        assertEquals("Kollar", result.getLastname());
+        assertEquals(1, result.getIdemp());
+        assertEquals("kollar@pobox.sk", result.getEmail());
+        assertEquals('C', result.getPosition());    
+    }
+    @Test
+    public void testGetEmployee2() {
+        System.out.println("getEmployee");
+        int id = 2;
+        ConnectionProvider instance = new ConnectionProvider();
+        Employee result = instance.getEmployee(id);
+        assertEquals("Daniel", result.getFirstname());
+        assertEquals("Molnar", result.getLastname());
+        assertEquals(2, result.getIdemp());
+        assertEquals("molnar@pobox.sk", result.getEmail());
+        assertEquals('C', result.getPosition());    
     }
     
 }

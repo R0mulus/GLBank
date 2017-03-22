@@ -35,9 +35,25 @@ public class ConnectionProvider {
         }
         return conn;
     }
+    
+    public void changePassword(int idemp, String newPassword) {
+        String query = "UPDATE LoginEmployee SET password = ? WHERE idemp LIKE ?";
+        Connection conn = getConnection();
+        if (conn != null) {
+            try(PreparedStatement ps = conn.prepareStatement(query)) {
+                ps.setString(1, newPassword);
+                ps.setInt(2, idemp);
+                ps.execute();
+                conn.close();
+            }
+            catch(SQLException ex){
+                System.out.println("Error: " + ex.toString());
+            }
+        }
+    }
 
     public boolean isEmployeePasswordValid(String username, String password) {
-        String query = "SELECT idemp FROM LoginEmployee WHERE login LIKE ? AND password LIKE ?";
+        String query = "SELECT idemp FROM LoginEmployee WHERE login LIKE BINARY ? AND password LIKE BINARY ?";
         Connection conn = getConnection();
         if (conn != null) {
             try {
@@ -56,9 +72,30 @@ public class ConnectionProvider {
         }
         return false;
     }
+    
+    public boolean isEmployeePasswordValid(int idemp, String password) {
+        String query = "SELECT idemp FROM LoginEmployee WHERE idemp LIKE BINARY ? AND password LIKE BINARY ?";
+        Connection conn = getConnection();
+        if (conn != null) {
+            try {
+                PreparedStatement ps = conn.prepareStatement(query);
+                ps.setInt(1, idemp);
+                ps.setString(2, password);
+                ResultSet rs = ps.executeQuery();
+                boolean result = rs.next();
+
+                conn.close();
+
+                return result;
+            } catch (SQLException ex) {
+                System.out.println("Error: " + ex.toString());
+            }
+        }
+        return false;
+    }
 
     public int getEmployeeId(String username) {
-        String query = "SELECT idemp FROM LoginEmployee WHERE login LIKE ?";
+        String query = "SELECT idemp FROM LoginEmployee WHERE login LIKE BINARY ?";
         Connection conn = getConnection();
         int id = -1;
 
