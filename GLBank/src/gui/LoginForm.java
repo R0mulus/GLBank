@@ -117,9 +117,7 @@ public class LoginForm extends javax.swing.JFrame {
         String login = txtLogin.getText();
         char[] arrPassword = txtPassword.getPassword();
         String password = new String(arrPassword);
-
-        System.out.println("login: " + login + ";pass: " + password);
-
+        
         if( !(login.equals("")) && (password.length() > 3) ){
             ConnectionProvider conn = new ConnectionProvider();
             if(conn.isEmployeePasswordValid(login, password)){
