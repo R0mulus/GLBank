@@ -6,7 +6,9 @@
 package gui;
 
 import database.ConnectionProvider;
+import glbank.Client;
 import glbank.Employee;
+import java.util.List;
 
 /**
  *
@@ -28,6 +30,7 @@ public class MainForm extends javax.swing.JFrame {
     
     private void initFormData(){
         printEmployeeName();
+        showListOfClients();
     }
     
     private void printEmployeeName(){
@@ -37,6 +40,19 @@ public class MainForm extends javax.swing.JFrame {
             lblEmployeeName.setText("Logged in user: " + name);
         }
     }
+    
+    private void showListOfClients(){
+        List<Client> list = new ConnectionProvider().getListOfAllClients();
+        if(list != null && list.size() > 0){
+            for(Client client : list){
+                String item = client.getLastname() + " " + client.getFirstname() + 
+                        " [" + client.getDob() + "]";
+                cmbListOfAllClients.addItem(item);
+            }
+            
+        }
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -49,8 +65,10 @@ public class MainForm extends javax.swing.JFrame {
 
         lblEmployeeName = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        cmbBoxSelectClient = new javax.swing.JComboBox<>();
+        cmbListOfAllClients = new javax.swing.JComboBox<>();
         jSeparator1 = new javax.swing.JSeparator();
+        jSeparator2 = new javax.swing.JSeparator();
+        btnCreateNewClient = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         menuChangePass = new javax.swing.JMenuItem();
@@ -63,10 +81,17 @@ public class MainForm extends javax.swing.JFrame {
 
         jLabel1.setText("Select client: ");
 
-        cmbBoxSelectClient.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        cmbBoxSelectClient.addActionListener(new java.awt.event.ActionListener() {
+        cmbListOfAllClients.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Choose" }));
+        cmbListOfAllClients.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmbBoxSelectClientActionPerformed(evt);
+                cmbListOfAllClientsActionPerformed(evt);
+            }
+        });
+
+        btnCreateNewClient.setText("New Client");
+        btnCreateNewClient.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCreateNewClientActionPerformed(evt);
             }
         });
 
@@ -104,12 +129,15 @@ public class MainForm extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblEmployeeName, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 469, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cmbBoxSelectClient, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(18, Short.MAX_VALUE))
+                        .addComponent(cmbListOfAllClients, 0, 86, Short.MAX_VALUE)
+                        .addGap(244, 244, 244))
+                    .addComponent(btnCreateNewClient)
+                    .addComponent(jSeparator1)
+                    .addComponent(jSeparator2))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -121,8 +149,12 @@ public class MainForm extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(cmbBoxSelectClient, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(250, Short.MAX_VALUE))
+                    .addComponent(cmbListOfAllClients, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 116, Short.MAX_VALUE)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnCreateNewClient)
+                .addGap(23, 23, 23))
         );
 
         pack();
@@ -137,18 +169,25 @@ public class MainForm extends javax.swing.JFrame {
         changePassForm.setVisible(true);
     }//GEN-LAST:event_menuChangePassActionPerformed
 
-    private void cmbBoxSelectClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbBoxSelectClientActionPerformed
+    private void cmbListOfAllClientsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbListOfAllClientsActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cmbBoxSelectClientActionPerformed
+    }//GEN-LAST:event_cmbListOfAllClientsActionPerformed
+
+    private void btnCreateNewClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateNewClientActionPerformed
+        NewClientForm newClientForm = new NewClientForm(this, true);
+        newClientForm.setVisible(true);
+    }//GEN-LAST:event_btnCreateNewClientActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> cmbBoxSelectClient;
+    private javax.swing.JButton btnCreateNewClient;
+    private javax.swing.JComboBox<String> cmbListOfAllClients;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel lblEmployeeName;
     private javax.swing.JMenuItem menuChangePass;
     private javax.swing.JMenuItem menuExit;

@@ -8,10 +8,11 @@ CREATE TABLE Clients (
 
 CREATE TABLE ClientDetails (
 	idcd INTEGER AUTO_INCREMENT,
-	idc INTEGER,
+	idc INTEGER NOT NULL,
 	street VARCHAR(20) NOT NULL,
 	houseNumber INTEGER NOT NULL,
 	postcode CHAR(5) NOT NULL,
+	city VARCHAR(20) NOT NULL,
 	dob DATE NOT NULL,
 	email VARCHAR(30),
 	PRIMARY KEY (idcd),
@@ -22,7 +23,7 @@ CREATE TABLE ClientDetails (
 
 CREATE TABLE LoginClient (
 	idlc INTEGER AUTO_INCREMENT,
-	idc INTEGER,
+	idc INTEGER NOT NULL,
 	username VARCHAR(20) NOT NULL,
 	password VARCHAR(20) NOT NULL,
 	blocked CHAR(1) DEFAULT 'F',

@@ -6,13 +6,17 @@
 package database;
 
 import glbank.Employee;
+import glbank.Client;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -36,22 +40,6 @@ public class ConnectionProvider {
         return conn;
     }
     
-    public void changePassword(int idemp, String newPassword) {
-        String query = "UPDATE LoginEmployee SET password = ? WHERE idemp LIKE ?";
-        Connection conn = getConnection();
-        if (conn != null) {
-            try(PreparedStatement ps = conn.prepareStatement(query)) {
-                ps.setString(1, newPassword);
-                ps.setInt(2, idemp);
-                ps.execute();
-                conn.close();
-            }
-            catch(SQLException ex){
-                System.out.println("Error: " + ex.toString());
-            }
-        }
-    }
-
     public boolean isEmployeePasswordValid(String username, String password) {
         String query = "SELECT idemp FROM LoginEmployee WHERE login LIKE BINARY ? AND password LIKE BINARY ?";
         Connection conn = getConnection();
@@ -166,6 +154,55 @@ public class ConnectionProvider {
 
         return employee;
     }
+    
+    public void changePassword(int idemp, String newPassword) {
+        String query = "UPDATE LoginEmployee SET password = ? WHERE idemp LIKE ?";
+        Connection conn = getConnection();
+        if (conn != null) {
+            try(PreparedStatement ps = conn.prepareStatement(query)) {
+                ps.setString(1, newPassword);
+                ps.setInt(2, idemp);
+                ps.execute();
+                conn.close();
+            }
+            catch(SQLException ex){
+                System.out.println("Error: " + ex.toString());
+            }
+        }
+    }
 
+    
+    public List<Client> getListOfAllClients(){
+        String query = "SELECT * FROM Clients " +
+                "INNER JOIN ClientDetails ON Clients.idc = ClientDetails.idc " +
+                "WHERE disable LIKE 'F' " +
+                "ORDER BY clients.lastname, clients.firstname ";
+        Connection conn = getConnection();
+        List<Client> list= new ArrayList<>();
+        if(conn != null){
+           try(Statement statement = conn.createStatement()){
+               ResultSet rs = statement.executeQuery(query);
+               while(rs.next()){
+                   int idc = rs.getInt("Clients.idc");
+                   String firstname = rs.getString("firstname");
+                   String lastname = rs.getString("lastname");
+                   Date date = rs.getDate("dob");
+                   Client client = new Client(idc, firstname, lastname, date);
+                   list.add(client);
+               }
+               conn.close();
+           
+           }catch(SQLException ex){
+                System.out.println("Error: " + ex.toString());
+           }
+                     
+        }
+        
+       return list;
+    }
+    
+    private void generateClientPassword(){
+        
+    }
     
 }
