@@ -5,6 +5,7 @@
  */
 package database;
 
+import glbank.Account;
 import glbank.Employee;
 import glbank.Client;
 import java.sql.Connection;
@@ -203,6 +204,28 @@ public class ConnectionProvider {
     
     private void generateClientPassword(){
         
+    }
+    
+    public List<Account> getListOfAccounts(int idc){
+        String query = "SELECT * FROM Accounts WHERE idc LIKE ? ";
+        Connection conn = getConnection();
+        
+        try {
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setInt(1, idc);
+            ResultSet rs = ps.executeQuery(query);
+            List<Account> listAcc = new ArrayList<>();
+            while(rs.next()){
+                Account account = new Account(rs.getLong("idacc"), idc, rs.getLong("balance"));
+                listAcc.add(account);
+            }
+            
+        } catch (SQLException ex){
+                System.out.println("Error: " + ex.toString());
+        }
+       
+        
+        return listAcc;
     }
     
 }

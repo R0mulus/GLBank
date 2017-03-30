@@ -17,6 +17,7 @@ import java.util.List;
 public class MainForm extends javax.swing.JFrame {
     private int idemp;
     private ConnectionProvider conn;
+    private List<Client> list;
     /**
      * Creates new form MainForm
      */
@@ -42,7 +43,7 @@ public class MainForm extends javax.swing.JFrame {
     }
     
     private void showListOfClients(){
-        List<Client> list = new ConnectionProvider().getListOfAllClients();
+        list = new ConnectionProvider().getListOfAllClients();
         if(list != null && list.size() > 0){
             for(Client client : list){
                 String item = client.getLastname() + " " + client.getFirstname() + 
@@ -69,6 +70,7 @@ public class MainForm extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
         btnCreateNewClient = new javax.swing.JButton();
+        tabPanel = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         menuChangePass = new javax.swing.JMenuItem();
@@ -94,6 +96,17 @@ public class MainForm extends javax.swing.JFrame {
                 btnCreateNewClientActionPerformed(evt);
             }
         });
+
+        javax.swing.GroupLayout tabPanelLayout = new javax.swing.GroupLayout(tabPanel);
+        tabPanel.setLayout(tabPanelLayout);
+        tabPanelLayout.setHorizontalGroup(
+            tabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        tabPanelLayout.setVerticalGroup(
+            tabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 216, Short.MAX_VALUE)
+        );
 
         jMenu1.setText("Menu");
 
@@ -128,15 +141,18 @@ public class MainForm extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblEmployeeName, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cmbListOfAllClients, 0, 86, Short.MAX_VALUE)
-                        .addGap(244, 244, 244))
-                    .addComponent(btnCreateNewClient)
+                    .addComponent(tabPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jSeparator1)
-                    .addComponent(jSeparator2))
+                    .addComponent(jSeparator2)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(lblEmployeeName, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnCreateNewClient)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(74, 74, 74)
+                                .addComponent(cmbListOfAllClients, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 395, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -150,7 +166,9 @@ public class MainForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(cmbListOfAllClients, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 116, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(tabPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnCreateNewClient)
@@ -170,7 +188,11 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_menuChangePassActionPerformed
 
     private void cmbListOfAllClientsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbListOfAllClientsActionPerformed
-        // TODO add your handling code here:
+        int index = cmbListOfAllClients.getSelectedIndex();
+        tabPanel.removeAll();
+        if(index>0){
+            int idc = list.get(index-1).getIdc();
+        }
     }//GEN-LAST:event_cmbListOfAllClientsActionPerformed
 
     private void btnCreateNewClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateNewClientActionPerformed
@@ -191,5 +213,6 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JLabel lblEmployeeName;
     private javax.swing.JMenuItem menuChangePass;
     private javax.swing.JMenuItem menuExit;
+    private javax.swing.JPanel tabPanel;
     // End of variables declaration//GEN-END:variables
 }

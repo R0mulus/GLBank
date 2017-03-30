@@ -25,7 +25,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="123" max="-2" attributes="0"/>
-              <Component id="btnNewClientOK" min="-2" pref="66" max="-2" attributes="0"/>
+              <Component id="btnNewClientCreate" min="-2" pref="66" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="btnNewClientCancel" min="-2" max="-2" attributes="0"/>
               <EmptySpace pref="122" max="32767" attributes="0"/>
@@ -116,7 +116,7 @@
               </Group>
               <EmptySpace pref="37" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="btnNewClientOK" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnNewClientCreate" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnNewClientCancel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
@@ -125,10 +125,13 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JButton" name="btnNewClientOK">
+    <Component class="javax.swing.JButton" name="btnNewClientCreate">
       <Properties>
         <Property name="text" type="java.lang.String" value="OK"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnNewClientCreateActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnNewClientCancel">
       <Properties>

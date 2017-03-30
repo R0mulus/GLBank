@@ -29,7 +29,7 @@ public class NewClientForm extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btnNewClientOK = new javax.swing.JButton();
+        btnNewClientCreate = new javax.swing.JButton();
         btnNewClientCancel = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -54,7 +54,12 @@ public class NewClientForm extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        btnNewClientOK.setText("OK");
+        btnNewClientCreate.setText("OK");
+        btnNewClientCreate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNewClientCreateActionPerformed(evt);
+            }
+        });
 
         btnNewClientCancel.setText("Cancel");
         btnNewClientCancel.addActionListener(new java.awt.event.ActionListener() {
@@ -101,7 +106,7 @@ public class NewClientForm extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(123, 123, 123)
-                .addComponent(btnNewClientOK, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnNewClientCreate, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnNewClientCancel)
                 .addContainerGap(122, Short.MAX_VALUE))
@@ -177,7 +182,7 @@ public class NewClientForm extends javax.swing.JDialog {
                     .addComponent(jLabel10))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnNewClientOK)
+                    .addComponent(btnNewClientCreate)
                     .addComponent(btnNewClientCancel))
                 .addGap(23, 23, 23))
         );
@@ -197,9 +202,13 @@ public class NewClientForm extends javax.swing.JDialog {
 
     }//GEN-LAST:event_txtNewClientPasswordActionPerformed
 
+    private void btnNewClientCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewClientCreateActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnNewClientCreateActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnNewClientCancel;
-    private javax.swing.JButton btnNewClientOK;
+    private javax.swing.JButton btnNewClientCreate;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
