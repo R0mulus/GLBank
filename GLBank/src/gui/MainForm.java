@@ -8,6 +8,8 @@ package gui;
 import database.ConnectionProvider;
 import glbank.Client;
 import glbank.Employee;
+import gui.panels.PanelAboutUser;
+import gui.panels.PanelAccounts;
 import java.util.List;
 
 /**
@@ -50,11 +52,9 @@ public class MainForm extends javax.swing.JFrame {
                         " [" + client.getDob() + "]";
                 cmbListOfAllClients.addItem(item);
             }
-            
         }
     }
     
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -70,7 +70,7 @@ public class MainForm extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
         btnCreateNewClient = new javax.swing.JButton();
-        tabPanel = new javax.swing.JPanel();
+        tabPanel = new javax.swing.JTabbedPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         menuChangePass = new javax.swing.JMenuItem();
@@ -96,17 +96,6 @@ public class MainForm extends javax.swing.JFrame {
                 btnCreateNewClientActionPerformed(evt);
             }
         });
-
-        javax.swing.GroupLayout tabPanelLayout = new javax.swing.GroupLayout(tabPanel);
-        tabPanel.setLayout(tabPanelLayout);
-        tabPanelLayout.setHorizontalGroup(
-            tabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        tabPanelLayout.setVerticalGroup(
-            tabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 216, Short.MAX_VALUE)
-        );
 
         jMenu1.setText("Menu");
 
@@ -138,13 +127,13 @@ public class MainForm extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tabPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jSeparator1)
-                    .addComponent(jSeparator2)
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(tabPanel)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(lblEmployeeName, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -166,8 +155,8 @@ public class MainForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(cmbListOfAllClients, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(tabPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(tabPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -189,9 +178,14 @@ public class MainForm extends javax.swing.JFrame {
 
     private void cmbListOfAllClientsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbListOfAllClientsActionPerformed
         int index = cmbListOfAllClients.getSelectedIndex();
-        tabPanel.removeAll();
-        if(index>0){
-            int idc = list.get(index-1).getIdc();
+        tabPanel.removeAll();        
+        if (index > 0) {
+            Client selectedClient = list.get(index - 1);
+            Client client = new ConnectionProvider().getClientByID(selectedClient.getIdc());
+            PanelAboutUser panelAboutUser = new PanelAboutUser(client);
+            tabPanel.add("About client", panelAboutUser);
+            PanelAccounts panelAccounts = new PanelAccounts(client.getIdc());
+            tabPanel.add("Accounts", panelAccounts);
         }
     }//GEN-LAST:event_cmbListOfAllClientsActionPerformed
 
@@ -213,6 +207,6 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JLabel lblEmployeeName;
     private javax.swing.JMenuItem menuChangePass;
     private javax.swing.JMenuItem menuExit;
-    private javax.swing.JPanel tabPanel;
+    private javax.swing.JTabbedPane tabPanel;
     // End of variables declaration//GEN-END:variables
 }

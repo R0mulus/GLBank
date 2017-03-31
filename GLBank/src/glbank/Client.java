@@ -59,6 +59,38 @@ public class Client {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public int getHousenumber() {
+        return housenumber;
+    }
+
+    public String getPostcode() {
+        return postcode;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public boolean isDisable() {
+        return disable;
+    }
+
+    public boolean isBlocked() {
+        return blocked;
+    }
+
     public int getIdc() {
         return idc;
     }

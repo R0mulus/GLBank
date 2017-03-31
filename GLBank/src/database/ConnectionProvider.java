@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  *
@@ -207,25 +208,97 @@ public class ConnectionProvider {
     }
     
     public List<Account> getListOfAccounts(int idc){
-        String query = "SELECT * FROM Accounts WHERE idc LIKE ? ";
         Connection conn = getConnection();
-        
+        String query = "SELECT * FROM Accounts WHERE idc LIKE ?";
+        List<Account> listAcc = new ArrayList<>();
         try {
             PreparedStatement ps = conn.prepareStatement(query);
+            
             ps.setInt(1, idc);
-            ResultSet rs = ps.executeQuery(query);
-            List<Account> listAcc = new ArrayList<>();
+            ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                Account account = new Account(rs.getLong("idacc"), idc, rs.getLong("balance"));
+                Account account = new Account(rs.getLong("idacc"), idc, rs.getFloat("balance"));
                 listAcc.add(account);
             }
             
         } catch (SQLException ex){
                 System.out.println("Error: " + ex.toString());
         }
-       
         
         return listAcc;
+    }    
+    
+    
+    public Client getClientByID(int idc) {
+        String query = "SELECT * FROM Clients " +
+                "INNER JOIN ClientDetails ON Clients.idc = ClientDetails.idc " +
+                "INNER JOIN LoginClient ON Clients.idc = LoginClient.idc " +
+                "WHERE Clients.idc LIKE ?";
+        Connection conn = getConnection();
+        Client client = null;
+        if (conn != null) {
+            try (PreparedStatement ps = conn.prepareStatement(query)) {
+                ps.setInt(1, idc);
+                ResultSet rs = ps.executeQuery();
+                if (rs.next()) {
+                    String firstname = rs.getString("Clients.firstname");
+                    String lastname = rs.getString("Clients.lastname");
+                    String email = rs.getString("ClientDetails.email");
+                    String street = rs.getString("ClientDetails.street");
+                    int housenumber = rs.getInt("ClientDetails.housenumber");
+                    String postcode = rs.getString("ClientDetails.postcode");
+                    String city = rs.getString("ClientDetails.city");
+                    String username = rs.getString("LoginClient.username");
+                    boolean disable = rs.getString("Clients.disable").charAt(0) == 'F';
+                    boolean blocked = rs.getString("LoginClient.blocked").charAt(0) == 'F';
+                    Date dob = rs.getDate("ClientDetails.dob");
+
+                    client = new Client(idc, firstname, lastname, email, street, housenumber, postcode, city, username, disable, blocked, dob);
+                    
+                    
+                }
+                conn.close();
+            } catch (SQLException ex) {
+                System.out.println("Error: " + ex.toString());
+            }
+        }
+        
+        return client;
     }
+    
+    public void createRandomAccount(int idc){
+        long randomAccountNum = ThreadLocalRandom.current().nextLong(100000000, 900000000) * 11;
+        
+        String query = "INSERT INTO Accounts VALUES(?, ?, ?)";
+        Connection conn = getConnection();
+        if(conn != null){
+            try{
+                PreparedStatement ps = conn.prepareStatement(query);
+                ps.setLong(1, randomAccountNum);
+                ps.setInt(2, idc);
+                ps.setInt(3, 0);
+                ps.execute();
+            }catch(SQLException ex){
+                System.out.println("Error: " + ex.toString());
+            }
+        }
+    }
+    
+    public void controlFundsToSelectedAccount(long idacc, double balance, char type){
+        String query = "UPDATE Accounts SET balance = balance " + type + " ? WHERE idacc LIKE ?";
+        Connection conn = getConnection();
+        if (conn != null) {
+            try(PreparedStatement ps = conn.prepareStatement(query)) {
+                ps.setDouble(1, balance);
+                ps.setLong(2, idacc);
+                ps.execute();
+                conn.close();
+            }
+            catch(SQLException ex){
+                System.out.println("Error: " + ex.toString());
+            }
+        }
+    }
+   
     
 }
