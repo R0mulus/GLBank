@@ -203,10 +203,6 @@ public class ConnectionProvider {
        return list;
     }
     
-    private void generateClientPassword(){
-        
-    }
-    
     public List<Account> getListOfAccounts(int idc){
         Connection conn = getConnection();
         String query = "SELECT * FROM Accounts WHERE idc LIKE ?";
@@ -266,8 +262,12 @@ public class ConnectionProvider {
         return client;
     }
     
+    public long randomAcc(){
+        return ThreadLocalRandom.current().nextLong(1000000, 900000000) * 11;
+    }
+    
     public void createRandomAccount(int idc){
-        long randomAccountNum = ThreadLocalRandom.current().nextLong(100000000, 900000000) * 11;
+        long randomAccountNum = randomAcc();
         
         String query = "INSERT INTO Accounts VALUES(?, ?, ?)";
         Connection conn = getConnection();
@@ -284,12 +284,12 @@ public class ConnectionProvider {
         }
     }
     
-    public void controlFundsToSelectedAccount(long idacc, double balance, char type){
+    public void controlFundsToSelectedAccount(long idacc, float balance, char type){
         String query = "UPDATE Accounts SET balance = balance " + type + " ? WHERE idacc LIKE ?";
         Connection conn = getConnection();
         if (conn != null) {
             try(PreparedStatement ps = conn.prepareStatement(query)) {
-                ps.setDouble(1, balance);
+                ps.setFloat(1, balance);
                 ps.setLong(2, idacc);
                 ps.execute();
                 conn.close();

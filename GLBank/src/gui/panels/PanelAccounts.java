@@ -9,6 +9,7 @@ import database.ConnectionProvider;
 import glbank.Account;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -142,20 +143,20 @@ public class PanelAccounts extends javax.swing.JPanel {
     }//GEN-LAST:event_btnCreateNewAccountActionPerformed
 
     private void btnAddFundsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddFundsActionPerformed
-        
-        if(isDouble(txtAddFunds.getText())){
+        if(isFloat(txtAddFunds.getText())){
             System.out.println("add funds");
-            double funds = Double.parseDouble(txtAddFunds.getText());
+            
+            float funds = parseAndRoundUpStringToFloat(txtAddFunds.getText());
             controlFunds(funds, '+');
         }
     }//GEN-LAST:event_btnAddFundsActionPerformed
 
     private void btnSubFundsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubFundsActionPerformed
-        
-        if(isDouble(txtSubFunds.getText())){
-            System.out.println("remove funds");
-            double funds = Double.parseDouble(txtSubFunds.getText());
-            controlFunds(funds, '-');     
+        if(isFloat(txtSubFunds.getText())){
+            System.out.println("sub funds");
+            
+            float funds = parseAndRoundUpStringToFloat(txtSubFunds.getText());
+            controlFunds(funds, '-');
         }
     }//GEN-LAST:event_btnSubFundsActionPerformed
 
@@ -173,6 +174,7 @@ public class PanelAccounts extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     private void initAccountList() {
+        listAcc = null;
         listAcc = conn.getListOfAccounts(idc);
         
         if(listAcc != null && listAcc.size() > 0){
@@ -210,7 +212,7 @@ public class PanelAccounts extends javax.swing.JPanel {
        
     }
     
-    private void controlFunds(double funds, char type){
+    private void controlFunds(float funds, char type){
         int index = cmbBoxAccountList.getSelectedIndex();
         long selectedAccount = listAcc.get(index - 1).getIdacc();
         try {
@@ -224,12 +226,18 @@ public class PanelAccounts extends javax.swing.JPanel {
         txtSubFunds.setText("");
     }
     
-    private boolean isDouble(String str) {
+    private boolean isFloat(String str) {
         try {
-            Double.parseDouble(str);
+            Float.parseFloat(str);
             return true;
         } catch (NumberFormatException e) {
             return false;
         }
+    }
+    
+    private float parseAndRoundUpStringToFloat(String value){
+        float finalValue = Float.parseFloat(value);
+        finalValue = 100 / (float)Math.round(finalValue * 100);
+        return finalValue;
     }
 }

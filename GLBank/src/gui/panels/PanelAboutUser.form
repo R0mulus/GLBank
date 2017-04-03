@@ -66,7 +66,7 @@
                       </Group>
                   </Group>
                   <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
-                  <Component id="jButton1" alignment="0" min="-2" pref="87" max="-2" attributes="0"/>
+                  <Component id="btnEditClient" alignment="0" min="-2" pref="87" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
           </Group>
@@ -131,7 +131,7 @@
                   <Component id="lblAboutUserDOB" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+              <Component id="btnEditClient" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -244,7 +244,7 @@
         <Property name="text" type="java.lang.String" value="Address"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton1">
+    <Component class="javax.swing.JButton" name="btnEditClient">
       <Properties>
         <Property name="text" type="java.lang.String" value="Edit"/>
       </Properties>
