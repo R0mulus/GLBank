@@ -140,23 +140,29 @@ public class PanelAccounts extends javax.swing.JPanel {
 
     private void btnCreateNewAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateNewAccountActionPerformed
         conn.createRandomAccount(idc);
+        JOptionPane.showMessageDialog(btnAddFunds.getRootPane(), conn.getRandomBankAccount());
+        initAccountList();
     }//GEN-LAST:event_btnCreateNewAccountActionPerformed
 
     private void btnAddFundsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddFundsActionPerformed
         if(isFloat(txtAddFunds.getText())){
-            System.out.println("add funds");
             
-            float funds = parseAndRoundUpStringToFloat(txtAddFunds.getText());
-            controlFunds(funds, '+');
+            float funds = parseStringToFloat(txtAddFunds.getText());
+            if(funds >= 0.1){
+                controlFunds(funds, '+');
+                JOptionPane.showMessageDialog(btnAddFunds.getRootPane(), "Transaction complete");
+            }   
         }
     }//GEN-LAST:event_btnAddFundsActionPerformed
 
     private void btnSubFundsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubFundsActionPerformed
         if(isFloat(txtSubFunds.getText())){
-            System.out.println("sub funds");
             
-            float funds = parseAndRoundUpStringToFloat(txtSubFunds.getText());
-            controlFunds(funds, '-');
+            float funds = parseStringToFloat(txtSubFunds.getText());
+            if(funds >= 0.1){
+                controlFunds(funds, '-');
+                JOptionPane.showMessageDialog(btnSubFunds.getRootPane(), "Transaction complete");
+            }          
         }
     }//GEN-LAST:event_btnSubFundsActionPerformed
 
@@ -174,6 +180,8 @@ public class PanelAccounts extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     private void initAccountList() {
+        cmbBoxAccountList.removeAllItems();
+        cmbBoxAccountList.addItem("Choose");
         listAcc = null;
         listAcc = conn.getListOfAccounts(idc);
         
@@ -220,7 +228,6 @@ public class PanelAccounts extends javax.swing.JPanel {
             refreshBalance();
         } catch (NumberFormatException e) {
             e.printStackTrace();
-            System.out.println("Enter only numbers!");
         }
         txtAddFunds.setText("");
         txtSubFunds.setText("");
@@ -231,13 +238,14 @@ public class PanelAccounts extends javax.swing.JPanel {
             Float.parseFloat(str);
             return true;
         } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(btnSubFunds.getRootPane(), "Can not add string or negative numbers!");
             return false;
         }
     }
     
-    private float parseAndRoundUpStringToFloat(String value){
+    private float parseStringToFloat(String value){
         float finalValue = Float.parseFloat(value);
-        finalValue = 100 / (float)Math.round(finalValue * 100);
+        finalValue = (float)Math.round(finalValue * 100) / 100;
         return finalValue;
     }
 }

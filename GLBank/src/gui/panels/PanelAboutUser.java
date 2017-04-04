@@ -6,6 +6,7 @@
 package gui.panels;
 
 import glbank.Client;
+import gui.EditClientForm;
 
 /**
  *
@@ -107,6 +108,11 @@ public class PanelAboutUser extends javax.swing.JPanel {
         jLabel11.setText("Address");
 
         btnEditClient.setText("Edit");
+        btnEditClient.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditClientActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -204,6 +210,11 @@ public class PanelAboutUser extends javax.swing.JPanel {
                 .addGap(19, 19, 19))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnEditClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditClientActionPerformed
+        EditClientForm editClientForm = new EditClientForm(client);
+        editClientForm.setVisible(true);
+    }//GEN-LAST:event_btnEditClientActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

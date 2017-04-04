@@ -31,6 +31,7 @@ public class ConnectionProvider {
     private static final String URL = "jdbc:mysql://localhost/";
     private static final String DBNAME = "GLBank";
     private static final String DRIVER = "com.mysql.jdbc.Driver";
+    private long randomBankAccount;
 
     private Connection getConnection() {
         Connection conn = null;
@@ -245,11 +246,12 @@ public class ConnectionProvider {
                     String postcode = rs.getString("ClientDetails.postcode");
                     String city = rs.getString("ClientDetails.city");
                     String username = rs.getString("LoginClient.username");
+                    String password = rs.getString("LoginClient.password");
                     boolean disable = rs.getString("Clients.disable").charAt(0) == 'F';
                     boolean blocked = rs.getString("LoginClient.blocked").charAt(0) == 'F';
                     Date dob = rs.getDate("ClientDetails.dob");
 
-                    client = new Client(idc, firstname, lastname, email, street, housenumber, postcode, city, username, disable, blocked, dob);
+                    client = new Client(idc, firstname, lastname, email, street, housenumber, postcode, city, username, password, disable, blocked, dob);
                     
                     
                 }
@@ -262,19 +264,23 @@ public class ConnectionProvider {
         return client;
     }
     
-    public long randomAcc(){
-        return ThreadLocalRandom.current().nextLong(1000000, 900000000) * 11;
+    public void randomAcc(){
+        randomBankAccount = ThreadLocalRandom.current().nextLong(1000000, 900000000) * 11;
+    }
+
+    public long getRandomBankAccount() {
+        return randomBankAccount;
     }
     
     public void createRandomAccount(int idc){
-        long randomAccountNum = randomAcc();
-        
+        randomAcc(); //create new random acc number and save it to randomBankAccount;
+                
         String query = "INSERT INTO Accounts VALUES(?, ?, ?)";
         Connection conn = getConnection();
         if(conn != null){
             try{
                 PreparedStatement ps = conn.prepareStatement(query);
-                ps.setLong(1, randomAccountNum);
+                ps.setLong(1, randomBankAccount);
                 ps.setInt(2, idc);
                 ps.setInt(3, 0);
                 ps.execute();
@@ -295,6 +301,43 @@ public class ConnectionProvider {
                 conn.close();
             }
             catch(SQLException ex){
+                System.out.println("Error: " + ex.toString());
+            }
+        }
+    }
+    /*
+    public int getLastClientID(){
+        Connection conn = getConnection();
+        String query = "SELECT MAX(idc) FROM Clients";
+        int idc = -1;
+        try {
+            PreparedStatement ps = conn.prepareStatement(query);
+            
+            ps.setInt(1, idc);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                Account account = new Account(rs.getLong("idacc"), idc, rs.getFloat("balance"));
+                listAcc.add(account);
+            }
+            return idc;
+            
+        } catch (SQLException ex){
+                System.out.println("Error: " + ex.toString());
+        }
+        
+        return idc;
+    }
+    */
+    public void insertNewClientIntoClients(String firstname, String lastname){
+        String query = "INSERT INTO Clients SET (firstname, lastname) VALUES(?, ?)";
+        Connection conn = getConnection();
+        if(conn != null){
+            try{
+                PreparedStatement ps = conn.prepareStatement(query);
+                ps.setString(1, firstname);
+                ps.setString(2, lastname);
+                ps.execute();
+            }catch(SQLException ex){
                 System.out.println("Error: " + ex.toString());
             }
         }

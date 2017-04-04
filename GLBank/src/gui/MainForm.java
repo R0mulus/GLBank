@@ -10,6 +10,8 @@ import glbank.Client;
 import glbank.Employee;
 import gui.panels.PanelAboutUser;
 import gui.panels.PanelAccounts;
+import gui.panels.PanelCards;
+import gui.panels.PanelTransaction;
 import java.util.List;
 
 /**
@@ -135,11 +137,11 @@ public class MainForm extends javax.swing.JFrame {
                     .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
                             .addComponent(lblEmployeeName, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnCreateNewClient)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(74, 74, 74)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(cmbListOfAllClients, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 395, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -186,6 +188,10 @@ public class MainForm extends javax.swing.JFrame {
             tabPanel.add("About client", panelAboutUser);
             PanelAccounts panelAccounts = new PanelAccounts(client.getIdc());
             tabPanel.add("Accounts", panelAccounts);
+            PanelTransaction panelTransaction = new PanelTransaction();
+            tabPanel.add("Transactions", panelTransaction);
+            PanelCards panelCards = new PanelCards();
+            tabPanel.add("Cards", panelCards);
         }
     }//GEN-LAST:event_cmbListOfAllClientsActionPerformed
 
