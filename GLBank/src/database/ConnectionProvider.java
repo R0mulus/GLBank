@@ -6,6 +6,7 @@
 package database;
 
 import glbank.Account;
+import glbank.Card;
 import glbank.Employee;
 import glbank.Client;
 import java.sql.Connection;
@@ -32,6 +33,7 @@ public class ConnectionProvider {
     private static final String DBNAME = "GLBank";
     private static final String DRIVER = "com.mysql.jdbc.Driver";
     private long randomBankAccount;
+    private long randomCardNumber;
 
     private Connection getConnection() {
         Connection conn = null;
@@ -217,12 +219,13 @@ public class ConnectionProvider {
                 Account account = new Account(rs.getLong("idacc"), idc, rs.getFloat("balance"));
                 listAcc.add(account);
             }
+            return listAcc;
             
         } catch (SQLException ex){
                 System.out.println("Error: " + ex.toString());
         }
         
-        return listAcc;
+        return null;
     }    
     
     
@@ -305,7 +308,7 @@ public class ConnectionProvider {
             }
         }
     }
-    /*
+    
     public int getLastClientID(){
         Connection conn = getConnection();
         String query = "SELECT MAX(idc) FROM Clients";
@@ -315,9 +318,8 @@ public class ConnectionProvider {
             
             ps.setInt(1, idc);
             ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-                Account account = new Account(rs.getLong("idacc"), idc, rs.getFloat("balance"));
-                listAcc.add(account);
+            if(rs.next()){
+                
             }
             return idc;
             
@@ -327,7 +329,7 @@ public class ConnectionProvider {
         
         return idc;
     }
-    */
+    
     public void insertNewClientIntoClients(String firstname, String lastname){
         String query = "INSERT INTO Clients SET (firstname, lastname) VALUES(?, ?)";
         Connection conn = getConnection();
@@ -341,6 +343,38 @@ public class ConnectionProvider {
                 System.out.println("Error: " + ex.toString());
             }
         }
+    }
+    
+    public List<Card> getCards(int idacc){
+        Connection conn = getConnection();
+        String query = "SELECT * FROM Cards WHERE idacc LIKE ?";
+        List<Card> listCard = new ArrayList<>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setInt(1, idacc);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                int idc = rs.getInt("Cards.idc");
+                long cardNum = rs.getLong("Cards.cardnumber");
+                int pin = rs.getInt("Cards.pin");
+                Card card = new Card(idacc, idc, cardNum, pin);
+                listCard.add(card);
+            }
+            return listCard;
+            
+        } catch (SQLException ex){
+                System.out.println("Error: " + ex.toString());
+        }
+        
+        return null;
+    }
+    
+    public void randomCard(){
+        randomCardNumber = ThreadLocalRandom.current().nextLong(1000000, 900000000) * 11;
+    }
+
+    public long getRandomCardNumber() {
+        return randomCardNumber;
     }
    
     

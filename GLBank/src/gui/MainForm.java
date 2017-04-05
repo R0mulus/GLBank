@@ -10,8 +10,7 @@ import glbank.Client;
 import glbank.Employee;
 import gui.panels.PanelAboutUser;
 import gui.panels.PanelAccounts;
-import gui.panels.PanelCards;
-import gui.panels.PanelTransaction;
+import java.awt.Dimension;
 import java.util.List;
 
 /**
@@ -31,6 +30,8 @@ public class MainForm extends javax.swing.JFrame {
         conn = new ConnectionProvider();
         initFormData();
         setLocationRelativeTo(null);
+        this.setExtendedState(MAXIMIZED_BOTH);
+        this.setMinimumSize(new Dimension(750,630));
     }
     
     private void initFormData(){
@@ -92,7 +93,7 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
 
-        btnCreateNewClient.setText("New Client");
+        btnCreateNewClient.setText("Create new client");
         btnCreateNewClient.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCreateNewClientActionPerformed(evt);
@@ -136,22 +137,24 @@ public class MainForm extends javax.swing.JFrame {
                     .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblEmployeeName, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnCreateNewClient)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cmbListOfAllClients, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 395, Short.MAX_VALUE)))
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cmbListOfAllClients, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 512, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(lblEmployeeName, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnCreateNewClient)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addComponent(lblEmployeeName)
-                .addGap(18, 18, 18)
+                .addGap(20, 20, 20)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblEmployeeName)
+                    .addComponent(btnCreateNewClient))
+                .addGap(13, 13, 13)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -161,9 +164,7 @@ public class MainForm extends javax.swing.JFrame {
                 .addComponent(tabPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnCreateNewClient)
-                .addGap(23, 23, 23))
+                .addGap(52, 52, 52))
         );
 
         pack();
@@ -188,10 +189,6 @@ public class MainForm extends javax.swing.JFrame {
             tabPanel.add("About client", panelAboutUser);
             PanelAccounts panelAccounts = new PanelAccounts(client.getIdc());
             tabPanel.add("Accounts", panelAccounts);
-            PanelTransaction panelTransaction = new PanelTransaction();
-            tabPanel.add("Transactions", panelTransaction);
-            PanelCards panelCards = new PanelCards();
-            tabPanel.add("Cards", panelCards);
         }
     }//GEN-LAST:event_cmbListOfAllClientsActionPerformed
 

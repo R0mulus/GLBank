@@ -3,18 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gui.panels;
+package gui.panels.accountPanels;
 
 /**
  *
  * @author Joseph
  */
-public class PanelTransaction extends javax.swing.JPanel {
+public class PanelTransactions extends javax.swing.JPanel {
 
     /**
-     * Creates new form PanelTransaction
+     * Creates new form Transactions
      */
-    public PanelTransaction() {
+    public PanelTransactions() {
         initComponents();
     }
 
