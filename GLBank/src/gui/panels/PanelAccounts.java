@@ -7,6 +7,8 @@ package gui.panels;
 
 import database.ConnectionProvider;
 import glbank.Account;
+import gui.panels.accountPanels.PanelCards;
+import gui.panels.accountPanels.PanelTransactions;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -52,7 +54,7 @@ public class PanelAccounts extends javax.swing.JPanel {
 
         jLabel2.setText("Balance: ");
 
-        lblBalance.setText("0.00");
+        lblBalance.setText(" ");
 
         btnAddFunds.setText("Add funds");
         btnAddFunds.addActionListener(new java.awt.event.ActionListener() {
@@ -90,15 +92,6 @@ public class PanelAccounts extends javax.swing.JPanel {
                 .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnCreateNewAccount)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtAddFunds)
-                            .addComponent(btnAddFunds, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE))
-                        .addGap(43, 43, 43)
-                        .addComponent(btnSubFunds, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(txtSubFunds, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -108,8 +101,19 @@ public class PanelAccounts extends javax.swing.JPanel {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblBalance, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(cmbBoxAccountList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(tabAboutAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 619, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(20, Short.MAX_VALUE))
+                            .addComponent(tabAboutAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 619, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(20, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnCreateNewAccount)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtAddFunds)
+                            .addComponent(btnAddFunds, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtSubFunds, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnSubFunds, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(57, 57, 57))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -140,6 +144,17 @@ public class PanelAccounts extends javax.swing.JPanel {
     
     private void cmbBoxAccountListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbBoxAccountListActionPerformed
         refreshBalance();
+        tabAboutAccount.removeAll();
+        
+        int index = cmbBoxAccountList.getSelectedIndex();
+        if(index > 0 && !listAcc.isEmpty()){
+            Account selectedAccount = listAcc.get(index - 1);
+            long idacc = selectedAccount.getIdacc();
+            PanelCards panelCards = new PanelCards(idacc);
+            tabAboutAccount.add("Cards", panelCards);
+            PanelTransactions panelTransactions = new PanelTransactions();
+            tabAboutAccount.add("Transactions", panelTransactions);
+        }
     }//GEN-LAST:event_cmbBoxAccountListActionPerformed
 
     private void btnCreateNewAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateNewAccountActionPerformed
@@ -196,35 +211,23 @@ public class PanelAccounts extends javax.swing.JPanel {
             }
         }
         
-        lblBalance.setVisible(false);
-        txtAddFunds.setVisible(false);
-        txtSubFunds.setVisible(false);
-        btnAddFunds.setVisible(false);
-        btnSubFunds.setVisible(false);
-    }
-    
-    private void initCardList(){
-        
+        btnAddFunds.setEnabled(false);
+        btnSubFunds.setEnabled(false);
     }
     
     private void refreshBalance(){
         int index = cmbBoxAccountList.getSelectedIndex();
         listAcc = conn.getListOfAccounts(idc);
-        
+
         if(!listAcc.isEmpty() && index > 0){
             Account selectedAccount = listAcc.get(index - 1);
             lblBalance.setVisible(true);
             lblBalance.setText(String.valueOf(selectedAccount.getBalance()));
-            txtAddFunds.setVisible(true);
-            txtSubFunds.setVisible(true);
-            btnAddFunds.setVisible(true);
-            btnSubFunds.setVisible(true);
+            btnAddFunds.setEnabled(true);
+            btnSubFunds.setEnabled(true);
         }else {
-            lblBalance.setVisible(false);
-            txtAddFunds.setVisible(false);
-            txtSubFunds.setVisible(false);
-            btnAddFunds.setVisible(false);
-            btnSubFunds.setVisible(false);
+            btnAddFunds.setEnabled(false);
+            btnSubFunds.setEnabled(false);
         }
        
     }

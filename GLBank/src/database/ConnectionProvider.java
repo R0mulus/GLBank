@@ -120,6 +120,7 @@ public class ConnectionProvider {
                 ps.setInt(1, id);
                 ps.setString(2, date);
                 ps.execute();
+                conn.close();
             }catch(SQLException ex){
                 System.out.println("Error: " + ex.toString());
             }
@@ -209,24 +210,24 @@ public class ConnectionProvider {
     public List<Account> getListOfAccounts(int idc){
         Connection conn = getConnection();
         String query = "SELECT * FROM Accounts WHERE idc LIKE ?";
-        List<Account> listAcc = new ArrayList<>();
+        
         try {
             PreparedStatement ps = conn.prepareStatement(query);
-            
+            List<Account> listAcc = new ArrayList<>();
             ps.setInt(1, idc);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 Account account = new Account(rs.getLong("idacc"), idc, rs.getFloat("balance"));
                 listAcc.add(account);
             }
+            conn.close();
             return listAcc;
-            
         } catch (SQLException ex){
                 System.out.println("Error: " + ex.toString());
         }
         
         return null;
-    }    
+    } 
     
     
     public Client getClientByID(int idc) {
@@ -287,6 +288,7 @@ public class ConnectionProvider {
                 ps.setInt(2, idc);
                 ps.setInt(3, 0);
                 ps.execute();
+                conn.close();
             }catch(SQLException ex){
                 System.out.println("Error: " + ex.toString());
             }
@@ -309,6 +311,16 @@ public class ConnectionProvider {
         }
     }
     
+    public void randomCard(){
+        long randomMultiple = ThreadLocalRandom.current().nextLong(10000000, 99999999);
+        long randomBase = ThreadLocalRandom.current().nextLong(100000000, 100000001);
+        randomCardNumber  = randomBase * randomMultiple;
+    }
+
+    public long getRandomCardNumber() {
+        return randomCardNumber;
+    }
+    /*
     public int getLastClientID(){
         Connection conn = getConnection();
         String query = "SELECT MAX(idc) FROM Clients";
@@ -321,7 +333,7 @@ public class ConnectionProvider {
             if(rs.next()){
                 
             }
-            return idc;
+
             
         } catch (SQLException ex){
                 System.out.println("Error: " + ex.toString());
@@ -329,7 +341,10 @@ public class ConnectionProvider {
         
         return idc;
     }
+    */
     
+   
+    /*
     public void insertNewClientIntoClients(String firstname, String lastname){
         String query = "INSERT INTO Clients SET (firstname, lastname) VALUES(?, ?)";
         Connection conn = getConnection();
@@ -344,24 +359,27 @@ public class ConnectionProvider {
             }
         }
     }
+    */
     
-    public List<Card> getCards(int idacc){
+    public List<Card> getListOfCards(long idacc){
         Connection conn = getConnection();
         String query = "SELECT * FROM Cards WHERE idacc LIKE ?";
-        List<Card> listCard = new ArrayList<>();
+        
         try {
             PreparedStatement ps = conn.prepareStatement(query);
-            ps.setInt(1, idacc);
+            List<Card> listCard = new ArrayList<>();
+            ps.setLong(1, idacc);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                int idc = rs.getInt("Cards.idc");
-                long cardNum = rs.getLong("Cards.cardnumber");
-                int pin = rs.getInt("Cards.pin");
-                Card card = new Card(idacc, idc, cardNum, pin);
+                int idCard = rs.getInt("idCard");
+                long cardNum = rs.getLong("cardNumber");
+                int pin = rs.getInt("pin");
+                boolean blocked = rs.getString("blocked").charAt(0) == 'T';
+                Card card = new Card(idacc, idCard, cardNum, pin, blocked);
                 listCard.add(card);
             }
+            conn.close();
             return listCard;
-            
         } catch (SQLException ex){
                 System.out.println("Error: " + ex.toString());
         }
@@ -369,13 +387,51 @@ public class ConnectionProvider {
         return null;
     }
     
-    public void randomCard(){
-        randomCardNumber = ThreadLocalRandom.current().nextLong(1000000, 900000000) * 11;
+    public void blockCard(int idCard){
+        String query = "UPDATE Cards SET blocked = REPLACE(blocked,'F','T') WHERE idCard LIKE ?";
+        Connection conn = getConnection();
+        if (conn != null) {
+            try(PreparedStatement ps = conn.prepareStatement(query)) {
+                ps.setInt(1, idCard);
+                ps.execute();
+                conn.close();
+            }
+            catch(SQLException ex){
+                System.out.println("Error: " + ex.toString());
+            }
+        }
     }
-
-    public long getRandomCardNumber() {
-        return randomCardNumber;
+    
+    public void unblockCard(int idCard){
+        String query = "UPDATE Cards SET blocked = REPLACE(blocked,'T','F') WHERE idCard LIKE ?";
+        Connection conn = getConnection();
+        if (conn != null) {
+            try(PreparedStatement ps = conn.prepareStatement(query)) {
+                ps.setInt(1, idCard);
+                ps.execute();
+                conn.close();
+            }
+            catch(SQLException ex){
+                System.out.println("Error: " + ex.toString());
+            }
+        }
     }
-   
+    
+    public void changePIN(int idCard, int newPIN){
+        String query = "UPDATE Cards SET pin LIKE ? WHERE idCard LIKE ?";
+        Connection conn = getConnection();
+        if (conn != null) {
+            try(PreparedStatement ps = conn.prepareStatement(query)) {
+                ps.setInt(1, idCard);
+                ps.setInt(1, newPIN);
+                ps.execute();
+                conn.close();
+            }
+            catch(SQLException ex){
+                System.out.println("Error: " + ex.toString());
+            }
+        }
+    }
+    
     
 }

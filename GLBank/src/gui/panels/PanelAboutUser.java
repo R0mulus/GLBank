@@ -217,7 +217,8 @@ public class PanelAboutUser extends javax.swing.JPanel {
                     .addComponent(jLabel3)
                     .addComponent(lblAboutUserDOB))
                 .addGap(18, 18, 18)
-                .addComponent(btnEditClient))
+                .addComponent(btnEditClient)
+                .addContainerGap(19, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

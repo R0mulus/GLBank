@@ -30,7 +30,7 @@ public class MainForm extends javax.swing.JFrame {
         conn = new ConnectionProvider();
         initFormData();
         setLocationRelativeTo(null);
-        this.setExtendedState(MAXIMIZED_BOTH);
+        //this.setExtendedState(MAXIMIZED_BOTH); //start window in fullscreen
         this.setMinimumSize(new Dimension(750,630));
     }
     
