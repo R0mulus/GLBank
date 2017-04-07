@@ -38,13 +38,9 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btnPanelCardsUnblockCard" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Group type="102" attributes="0">
-                      <Component id="btnPanelCardsChangePin" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="txtPanelCardsChangePIN" min="-2" pref="114" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="btnPanelCardsChangePin" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="50" max="32767" attributes="0"/>
+              <EmptySpace pref="127" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -66,7 +62,6 @@
                   <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="lblPanelCardCardPIN" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnPanelCardsChangePin" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="txtPanelCardsChangePIN" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -154,8 +149,6 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPanelCardsUnblockCardActionPerformed"/>
       </Events>
-    </Component>
-    <Component class="javax.swing.JTextField" name="txtPanelCardsChangePIN">
     </Component>
   </SubComponents>
 </Form>

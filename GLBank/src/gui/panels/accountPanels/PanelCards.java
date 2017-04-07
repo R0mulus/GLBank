@@ -25,8 +25,10 @@ public class PanelCards extends javax.swing.JPanel {
     public PanelCards(long idacc) {
         this.idacc = idacc;
         initComponents();
-        initCardList();
-        
+        initCardList(); 
+    }
+    
+    public PanelCards() {
     }
 
     /** This method is called from within the constructor to
@@ -49,7 +51,6 @@ public class PanelCards extends javax.swing.JPanel {
         btnPanelCardsChangePin = new javax.swing.JButton();
         btnPanelCardsBlockCard = new javax.swing.JButton();
         btnPanelCardsUnblockCard = new javax.swing.JButton();
-        txtPanelCardsChangePIN = new javax.swing.JTextField();
 
         jLabel1.setText("Select Card: ");
 
@@ -116,11 +117,8 @@ public class PanelCards extends javax.swing.JPanel {
                         .addComponent(btnPanelCardsBlockCard)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnPanelCardsUnblockCard))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnPanelCardsChangePin)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtPanelCardsChangePIN, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(50, Short.MAX_VALUE))
+                    .addComponent(btnPanelCardsChangePin))
+                .addContainerGap(127, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -137,8 +135,7 @@ public class PanelCards extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(lblPanelCardCardPIN)
-                    .addComponent(btnPanelCardsChangePin)
-                    .addComponent(txtPanelCardsChangePIN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnPanelCardsChangePin))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -155,24 +152,17 @@ public class PanelCards extends javax.swing.JPanel {
     }//GEN-LAST:event_cmbBoxPanelCardSelectCardActionPerformed
 
     private void btnPanelCardsChangePinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPanelCardsChangePinActionPerformed
-        /*
-        String str = txtPanelCardsChangePIN.getText();
-        
-        if(isInt(str) && str.length() == 4){
-            int newPIN = Integer.parseInt(str);
-            conn.changePIN(getIdCard(), newPIN);
-            refreshCardInfo();
-        }
-        */
+        ChangePINForm changePinForm = new ChangePINForm();
+        changePinForm.setVisible(true);
     }//GEN-LAST:event_btnPanelCardsChangePinActionPerformed
 
     private void btnPanelCardsBlockCardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPanelCardsBlockCardActionPerformed
-        conn.blockCard(getIdCard());
+        conn.toggleCard(getCardID(), 'T');
         refreshCardInfo();
     }//GEN-LAST:event_btnPanelCardsBlockCardActionPerformed
 
     private void btnPanelCardsUnblockCardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPanelCardsUnblockCardActionPerformed
-        conn.unblockCard(getIdCard());
+        conn.toggleCard(getCardID(), 'F');
         refreshCardInfo();
     }//GEN-LAST:event_btnPanelCardsUnblockCardActionPerformed
 
@@ -189,10 +179,9 @@ public class PanelCards extends javax.swing.JPanel {
     private javax.swing.JLabel lblPanelCardCardBlocked;
     private javax.swing.JLabel lblPanelCardCardID;
     private javax.swing.JLabel lblPanelCardCardPIN;
-    private javax.swing.JTextField txtPanelCardsChangePIN;
     // End of variables declaration//GEN-END:variables
 
-    private int getIdCard(){
+    public int getCardID(){
         int index = cmbBoxPanelCardSelectCard.getSelectedIndex();
         if(index > 0 && !listOfCards.isEmpty()){
             Card selectedCard = listOfCards.get(index - 1);
@@ -231,6 +220,7 @@ public class PanelCards extends javax.swing.JPanel {
         lblPanelCardCardBlocked.setText("");
                    
         int index = cmbBoxPanelCardSelectCard.getSelectedIndex();
+        listOfCards = null;
         listOfCards = conn.getListOfCards(idacc);
         if(!listOfCards.isEmpty() && index > 0){
             Card selectedCard = listOfCards.get(index - 1);
@@ -241,16 +231,6 @@ public class PanelCards extends javax.swing.JPanel {
             }else{
                 lblPanelCardCardBlocked.setText("Yes");
             }
-        }
-    }
-    
-    private boolean isInt(String str) {
-        try {
-            Integer.parseInt(str);
-            return true;
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(btnPanelCardsChangePin.getRootPane(), "PIN can only be a number 4 digits long!");
-            return false;
         }
     }
     

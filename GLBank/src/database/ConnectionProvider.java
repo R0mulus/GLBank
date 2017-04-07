@@ -387,23 +387,17 @@ public class ConnectionProvider {
         return null;
     }
     
-    public void blockCard(int idCard){
-        String query = "UPDATE Cards SET blocked = REPLACE(blocked,'F','T') WHERE idCard LIKE ?";
-        Connection conn = getConnection();
-        if (conn != null) {
-            try(PreparedStatement ps = conn.prepareStatement(query)) {
-                ps.setInt(1, idCard);
-                ps.execute();
-                conn.close();
-            }
-            catch(SQLException ex){
-                System.out.println("Error: " + ex.toString());
-            }
+    public void toggleCard(int idCard, char block){
+        String query = "";
+        
+        switch (block){
+            case 'T': query = "UPDATE Cards SET blocked = REPLACE(blocked,'F','T') WHERE idCard LIKE ?";
+            break;
+            case 'F': query = "UPDATE Cards SET blocked = REPLACE(blocked,'T','F') WHERE idCard LIKE ?";
+            break;
+            default: System.out.println("toggleCard method bad parameters!");
         }
-    }
-    
-    public void unblockCard(int idCard){
-        String query = "UPDATE Cards SET blocked = REPLACE(blocked,'T','F') WHERE idCard LIKE ?";
+        
         Connection conn = getConnection();
         if (conn != null) {
             try(PreparedStatement ps = conn.prepareStatement(query)) {
@@ -420,14 +414,15 @@ public class ConnectionProvider {
     public void changePIN(int idCard, int newPIN){
         String query = "UPDATE Cards SET pin LIKE ? WHERE idCard LIKE ?";
         Connection conn = getConnection();
-        if (conn != null) {
+        
+        if(conn != null){
             try(PreparedStatement ps = conn.prepareStatement(query)) {
-                ps.setInt(1, idCard);
-                ps.setInt(1, newPIN);
+                ps.setInt(1,newPIN);
+                ps.setInt(2, idCard);
                 ps.execute();
                 conn.close();
-            }
-            catch(SQLException ex){
+                
+            } catch (SQLException ex) {
                 System.out.println("Error: " + ex.toString());
             }
         }
