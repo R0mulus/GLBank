@@ -411,13 +411,13 @@ public class ConnectionProvider {
         }
     }
     
-    public void changePIN(int idCard, int newPIN){
-        String query = "UPDATE Cards SET pin LIKE ? WHERE idCard LIKE ?";
+    public void changePIN(int newPIN, int idCard){
+        String query = "UPDATE Cards SET pin = ? WHERE idCard = ?";
         Connection conn = getConnection();
         
         if(conn != null){
             try(PreparedStatement ps = conn.prepareStatement(query)) {
-                ps.setInt(1,newPIN);
+                ps.setInt(1, newPIN);
                 ps.setInt(2, idCard);
                 ps.execute();
                 conn.close();

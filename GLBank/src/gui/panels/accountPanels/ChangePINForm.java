@@ -14,12 +14,14 @@ import javax.swing.JOptionPane;
  */
 public class ChangePINForm extends javax.swing.JFrame {
 
+    private int idCard;
     /**
      * Creates new form ChangePINForm
      */
-    public ChangePINForm() {
+    public ChangePINForm(int idCard) {
         initComponents();
         setLocationRelativeTo(null);
+        this.idCard = idCard;
     }
 
     /**
@@ -39,6 +41,14 @@ public class ChangePINForm extends javax.swing.JFrame {
         btnChangePINOK = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel1.setText("New PIN: ");
 
@@ -106,12 +116,22 @@ public class ChangePINForm extends javax.swing.JFrame {
         String newPIN2 = txtChangePINNewPINRepeat.getText();
         if(validatePIN(newPIN, newPIN2)){
             changePIN(newPIN);
+            JOptionPane.showMessageDialog(null, "PIN succesfully changed.");
+            this.dispose(); 
         }else{
-            JOptionPane.showMessageDialog(this.getRootPane(), "An error occured whle changing PIN.");
+            JOptionPane.showMessageDialog(null, "An error occured whle changing PIN.");
         }       
     }//GEN-LAST:event_btnChangePINOKActionPerformed
 
-   
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowClosing
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowClosed
+
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnChangePINCancel;
@@ -137,10 +157,8 @@ public class ChangePINForm extends javax.swing.JFrame {
     
     private void changePIN(String newPIN){
         ConnectionProvider conn = new ConnectionProvider();
-        PanelCards panelCard = new PanelCards();
         int pin = parseStringToInt(newPIN);
-        int idCard = panelCard.getCardID();
-        conn.changePIN(idCard, pin);
+        conn.changePIN(pin, idCard);
     }
 
     private boolean isInt(String str){
@@ -148,7 +166,7 @@ public class ChangePINForm extends javax.swing.JFrame {
             Integer.parseInt(str);
             return true;
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(btnChangePINOK.getRootPane(), "PIN can only be a number 4 digits long!");
+            JOptionPane.showMessageDialog(btnChangePINOK.getRootPane(), "PIN can only be a number exactly 4 digits long!");
             return false;
         }
     }

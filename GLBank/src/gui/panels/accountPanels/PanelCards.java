@@ -8,6 +8,8 @@ package gui.panels.accountPanels;
 
 import database.ConnectionProvider;
 import glbank.Card;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -152,8 +154,14 @@ public class PanelCards extends javax.swing.JPanel {
     }//GEN-LAST:event_cmbBoxPanelCardSelectCardActionPerformed
 
     private void btnPanelCardsChangePinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPanelCardsChangePinActionPerformed
-        ChangePINForm changePinForm = new ChangePINForm();
+        ChangePINForm changePinForm = new ChangePINForm(getCardID());
         changePinForm.setVisible(true);
+        changePinForm.addWindowListener(new WindowAdapter(){
+            public void windowClosed(WindowEvent e)
+            {
+                refreshCardInfo();
+            }
+        });
     }//GEN-LAST:event_btnPanelCardsChangePinActionPerformed
 
     private void btnPanelCardsBlockCardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPanelCardsBlockCardActionPerformed
@@ -183,9 +191,11 @@ public class PanelCards extends javax.swing.JPanel {
 
     public int getCardID(){
         int index = cmbBoxPanelCardSelectCard.getSelectedIndex();
+        //System.out.println("index: " + index);
         if(index > 0 && !listOfCards.isEmpty()){
             Card selectedCard = listOfCards.get(index - 1);
             int idCard = selectedCard.getIdCard();
+            //System.out.println("idcard: " + idCard);
             return idCard;
         }
         return -1;
@@ -214,7 +224,7 @@ public class PanelCards extends javax.swing.JPanel {
         }
     }
     
-    private void refreshCardInfo(){
+    public void refreshCardInfo(){
         lblPanelCardCardID.setText("");
         lblPanelCardCardPIN.setText("");
         lblPanelCardCardBlocked.setText("");
