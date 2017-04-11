@@ -30,9 +30,6 @@ public class PanelCards extends javax.swing.JPanel {
         initComponents();
         initCardList(); 
     }
-    
-    public PanelCards() {
-    }
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -162,7 +159,7 @@ public class PanelCards extends javax.swing.JPanel {
 
     private void cmbBoxPanelCardSelectCardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbBoxPanelCardSelectCardActionPerformed
         refreshCardInfo();
-        getCardIdAccount();
+        //getCardIdAccount();
     }//GEN-LAST:event_cmbBoxPanelCardSelectCardActionPerformed
 
     private void btnPanelCardsChangePinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPanelCardsChangePinActionPerformed
@@ -179,18 +176,16 @@ public class PanelCards extends javax.swing.JPanel {
     private void btnPanelCardsBlockCardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPanelCardsBlockCardActionPerformed
         conn.toggleCard(getCardID(), 'T');
         refreshCardInfo();
-        System.out.println(conn.getAllAccounts());
     }//GEN-LAST:event_btnPanelCardsBlockCardActionPerformed
 
     private void btnPanelCardsUnblockCardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPanelCardsUnblockCardActionPerformed
         conn.toggleCard(getCardID(), 'F');
         refreshCardInfo();
-        System.out.println(conn.getAllAccounts());
     }//GEN-LAST:event_btnPanelCardsUnblockCardActionPerformed
 
     private void btnPanelCardsCreateNewCardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPanelCardsCreateNewCardActionPerformed
-        conn.insertRandomCard(getCardIdAccount(), getRandomPIN());
-        refreshCardInfo();
+        conn.insertRandomCard(idacc, getRandomPIN());
+        initCardList();
         JOptionPane.showMessageDialog(null, "New card number: " + conn.getRandomCardNumber());
     }//GEN-LAST:event_btnPanelCardsCreateNewCardActionPerformed
 
@@ -241,8 +236,7 @@ public class PanelCards extends javax.swing.JPanel {
     private void initCardList(){
         cmbBoxPanelCardSelectCard.removeAllItems();
         cmbBoxPanelCardSelectCard.addItem("Choose");
-        listOfCards = null;
-        listOfCards = conn.getListOfCards(idacc);
+        fillListOfCards();
         if(listOfCards != null && listOfCards.size() > 0){
             for(Card card : listOfCards){
                 cmbBoxPanelCardSelectCard.addItem("" + card.getCardNumber());
@@ -250,14 +244,19 @@ public class PanelCards extends javax.swing.JPanel {
         }
     }
     
+    private void fillListOfCards(){
+        listOfCards = null;
+        listOfCards = conn.getListOfCards(idacc);
+    }
+
     public void refreshCardInfo(){
         lblPanelCardCardID.setText("");
         lblPanelCardCardPIN.setText("");
         lblPanelCardCardBlocked.setText("");
-                   
+        
+        fillListOfCards();
+        
         int index = cmbBoxPanelCardSelectCard.getSelectedIndex();
-        listOfCards = null;
-        listOfCards = conn.getListOfCards(idacc);
         if(!listOfCards.isEmpty() && index > 0){
             Card selectedCard = listOfCards.get(index - 1);
             lblPanelCardCardID.setText("" + selectedCard.getIdCard());
