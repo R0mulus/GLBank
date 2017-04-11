@@ -12,6 +12,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import javax.swing.JOptionPane;
 
 /**
@@ -53,6 +54,7 @@ public class PanelCards extends javax.swing.JPanel {
         btnPanelCardsChangePin = new javax.swing.JButton();
         btnPanelCardsBlockCard = new javax.swing.JButton();
         btnPanelCardsUnblockCard = new javax.swing.JButton();
+        btnPanelCardsCreateNewCard = new javax.swing.JButton();
 
         jLabel1.setText("Select Card: ");
 
@@ -96,6 +98,13 @@ public class PanelCards extends javax.swing.JPanel {
             }
         });
 
+        btnPanelCardsCreateNewCard.setText("Create new card");
+        btnPanelCardsCreateNewCard.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPanelCardsCreateNewCardActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -119,17 +128,20 @@ public class PanelCards extends javax.swing.JPanel {
                         .addComponent(btnPanelCardsBlockCard)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnPanelCardsUnblockCard))
-                    .addComponent(btnPanelCardsChangePin))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(btnPanelCardsCreateNewCard, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnPanelCardsChangePin, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(127, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(21, 21, 21)
+                .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(cmbBoxPanelCardSelectCard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(35, 35, 35)
+                    .addComponent(cmbBoxPanelCardSelectCard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnPanelCardsCreateNewCard))
+                .addGap(33, 33, 33)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(lblPanelCardCardID))
@@ -159,7 +171,7 @@ public class PanelCards extends javax.swing.JPanel {
         changePinForm.addWindowListener(new WindowAdapter(){
             public void windowClosed(WindowEvent e)
             {
-                refreshCardInfo();
+                refreshCardInfo();            
             }
         });
     }//GEN-LAST:event_btnPanelCardsChangePinActionPerformed
@@ -167,17 +179,26 @@ public class PanelCards extends javax.swing.JPanel {
     private void btnPanelCardsBlockCardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPanelCardsBlockCardActionPerformed
         conn.toggleCard(getCardID(), 'T');
         refreshCardInfo();
+        System.out.println(conn.getAllAccounts());
     }//GEN-LAST:event_btnPanelCardsBlockCardActionPerformed
 
     private void btnPanelCardsUnblockCardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPanelCardsUnblockCardActionPerformed
         conn.toggleCard(getCardID(), 'F');
         refreshCardInfo();
+        System.out.println(conn.getAllAccounts());
     }//GEN-LAST:event_btnPanelCardsUnblockCardActionPerformed
+
+    private void btnPanelCardsCreateNewCardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPanelCardsCreateNewCardActionPerformed
+        conn.insertRandomCard(getCardIdAccount(), getRandomPIN());
+        refreshCardInfo();
+        JOptionPane.showMessageDialog(null, "New card number: " + conn.getRandomCardNumber());
+    }//GEN-LAST:event_btnPanelCardsCreateNewCardActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnPanelCardsBlockCard;
     private javax.swing.JButton btnPanelCardsChangePin;
+    private javax.swing.JButton btnPanelCardsCreateNewCard;
     private javax.swing.JButton btnPanelCardsUnblockCard;
     private javax.swing.JComboBox<String> cmbBoxPanelCardSelectCard;
     private javax.swing.JLabel jLabel1;
@@ -199,6 +220,11 @@ public class PanelCards extends javax.swing.JPanel {
             return idCard;
         }
         return -1;
+    }
+    
+    private int getRandomPIN(){
+        int randomPIN = ThreadLocalRandom.current().nextInt(1,9999);
+        return randomPIN;
     }
     
     

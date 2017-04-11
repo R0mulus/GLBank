@@ -268,15 +268,46 @@ public class ConnectionProvider {
         return client;
     }
     
-    public void randomAcc(){
+    public List getAllAccounts(){
+        Connection conn = getConnection();
+        String query = "SELECT idacc FROM Accounts";
+        try {
+            PreparedStatement ps = conn.prepareStatement(query);
+            List<Long> accNumbers = new ArrayList<>();
+            long idacc = 0;
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                idacc = rs.getLong("idacc");
+                accNumbers.add(idacc);
+            }
+            conn.close();
+            return accNumbers;
+        } catch (SQLException ex){
+                System.out.println("Error: " + ex.toString());
+        }
+        
+        return null;
+    }
+    
+    private void createRandomAccNumber(){
         randomBankAccount = ThreadLocalRandom.current().nextLong(1000000, 900000000) * 11;
+    }
+    
+    public void randomAcc(){     
+        createRandomAccNumber();
+        List<Long> allAccounts = getAllAccounts();
+        for (long idacc : allAccounts) {
+            while(randomBankAccount == idacc){
+                createRandomAccNumber();
+            }
+        }
     }
 
     public long getRandomBankAccount() {
         return randomBankAccount;
     }
     
-    public void createRandomAccount(int idc){
+    public void insertRandomAccount(int idc){
         randomAcc(); //create new random acc number and save it to randomBankAccount;
                 
         String query = "INSERT INTO Accounts VALUES(?, ?, ?)";
@@ -311,14 +342,64 @@ public class ConnectionProvider {
         }
     }
     
-    public void randomCard(){
+    public List getAllCards(){
+        Connection conn = getConnection();
+        String query = "SELECT cardNumber FROM Cards";
+        try {
+            PreparedStatement ps = conn.prepareStatement(query);
+            List<Long> cardNumbers = new ArrayList<>();
+            long cardNumber = 0;
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                cardNumber = rs.getLong("cardNumber");
+                cardNumbers.add(cardNumber);
+            }
+            conn.close();
+            return cardNumbers;
+        } catch (SQLException ex){
+                System.out.println("Error: " + ex.toString());
+        }
+        
+        return null;
+    }
+    
+    private void createRandomCardNumber(){
         long randomMultiple = ThreadLocalRandom.current().nextLong(10000000, 99999999);
         long randomBase = ThreadLocalRandom.current().nextLong(100000000, 100000001);
         randomCardNumber  = randomBase * randomMultiple;
     }
+    
+    public void randomCard(){
+        createRandomCardNumber();
+        List<Long> allCards = getAllCards();
+        for (long idacc : allCards) {
+            while(randomCardNumber == idacc){
+                createRandomCardNumber();
+            }
+        }
+    }
 
     public long getRandomCardNumber() {
         return randomCardNumber;
+    }
+    
+    public void insertRandomCard(long idacc, int pin){
+        randomCard(); //create new random card number and save it to randomCardNumber;
+                
+        String query = "INSERT INTO Cards(cardNumber, idacc, pin) VALUES(?, ?, ?)";
+        Connection conn = getConnection();
+        if(conn != null){
+            try{
+                PreparedStatement ps = conn.prepareStatement(query);
+                ps.setLong(1, randomCardNumber);
+                ps.setLong(2, idacc);
+                ps.setInt(3, pin);                
+                ps.execute();
+                conn.close();
+            }catch(SQLException ex){
+                System.out.println("Error: " + ex.toString());
+            }
+        }
     }
     /*
     public int getLastClientID(){

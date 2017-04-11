@@ -158,8 +158,8 @@ public class PanelAccounts extends javax.swing.JPanel {
     }//GEN-LAST:event_cmbBoxAccountListActionPerformed
 
     private void btnCreateNewAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateNewAccountActionPerformed
-        conn.createRandomAccount(idc);
-        JOptionPane.showMessageDialog(btnAddFunds.getRootPane(), conn.getRandomBankAccount());
+        conn.insertRandomAccount(idc);
+        JOptionPane.showMessageDialog(btnAddFunds.getRootPane(), "New bank account: " + conn.getRandomBankAccount());
         initAccountList();
     }//GEN-LAST:event_btnCreateNewAccountActionPerformed
 
