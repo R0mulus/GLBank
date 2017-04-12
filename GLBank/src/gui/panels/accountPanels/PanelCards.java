@@ -159,18 +159,25 @@ public class PanelCards extends javax.swing.JPanel {
 
     private void cmbBoxPanelCardSelectCardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbBoxPanelCardSelectCardActionPerformed
         refreshCardInfo();
-        //getCardIdAccount();
     }//GEN-LAST:event_cmbBoxPanelCardSelectCardActionPerformed
 
     private void btnPanelCardsChangePinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPanelCardsChangePinActionPerformed
-        ChangePINForm changePinForm = new ChangePINForm(getCardID());
-        changePinForm.setVisible(true);
-        changePinForm.addWindowListener(new WindowAdapter(){
-            public void windowClosed(WindowEvent e)
-            {
-                refreshCardInfo();            
-            }
-        });
+        int index = cmbBoxPanelCardSelectCard.getSelectedIndex();
+        Card selectedCard = listOfCards.get(index - 1);
+        if(!selectedCard.isBlocked()){
+            ChangePINForm changePinForm = new ChangePINForm(getCardID());
+            changePinForm.setVisible(true);
+            changePinForm.addWindowListener(new WindowAdapter(){
+                public void windowClosed(WindowEvent e)
+                {
+                    refreshCardInfo();            
+                }
+            });
+        }else{
+            JOptionPane.showMessageDialog(null, "Can not alter PIN of blocked card!");
+        }
+        
+        
     }//GEN-LAST:event_btnPanelCardsChangePinActionPerformed
 
     private void btnPanelCardsBlockCardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPanelCardsBlockCardActionPerformed
@@ -207,11 +214,9 @@ public class PanelCards extends javax.swing.JPanel {
 
     public int getCardID(){
         int index = cmbBoxPanelCardSelectCard.getSelectedIndex();
-        //System.out.println("index: " + index);
         if(index > 0 && !listOfCards.isEmpty()){
             Card selectedCard = listOfCards.get(index - 1);
             int idCard = selectedCard.getIdCard();
-            //System.out.println("idcard: " + idCard);
             return idCard;
         }
         return -1;
@@ -221,18 +226,7 @@ public class PanelCards extends javax.swing.JPanel {
         int randomPIN = ThreadLocalRandom.current().nextInt(1,9999);
         return randomPIN;
     }
-    
-    
-    private long getCardIdAccount(){
-        int index = cmbBoxPanelCardSelectCard.getSelectedIndex();
-        if(index > 0 && !listOfCards.isEmpty()){
-            Card selectedCard = listOfCards.get(index - 1);
-            idacc = selectedCard.getIdacc();
-            return idacc;
-        }
-        return -1;
-    }
-    
+   
     private void initCardList(){
         cmbBoxPanelCardSelectCard.removeAllItems();
         cmbBoxPanelCardSelectCard.addItem("Choose");
