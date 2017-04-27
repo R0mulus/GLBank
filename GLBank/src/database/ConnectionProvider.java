@@ -274,7 +274,7 @@ public class ConnectionProvider {
         try {
             PreparedStatement ps = conn.prepareStatement(query);
             List<Long> accNumbers = new ArrayList<>();
-            long idacc = 0;
+            long idacc;
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 idacc = rs.getLong("idacc");
@@ -348,7 +348,7 @@ public class ConnectionProvider {
         try {
             PreparedStatement ps = conn.prepareStatement(query);
             List<Long> cardNumbers = new ArrayList<>();
-            long cardNumber = 0;
+            long cardNumber;
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 cardNumber = rs.getLong("cardNumber");
@@ -401,46 +401,7 @@ public class ConnectionProvider {
             }
         }
     }
-    /*
-    public int getLastClientID(){
-        Connection conn = getConnection();
-        String query = "SELECT MAX(idc) FROM Clients";
-        int idc = -1;
-        try {
-            PreparedStatement ps = conn.prepareStatement(query);
-            
-            ps.setInt(1, idc);
-            ResultSet rs = ps.executeQuery();
-            if(rs.next()){
-                
-            }
-
-            
-        } catch (SQLException ex){
-                System.out.println("Error: " + ex.toString());
-        }
-        
-        return idc;
-    }
-    */
-    
-   
-    /*
-    public void insertNewClientIntoClients(String firstname, String lastname){
-        String query = "INSERT INTO Clients SET (firstname, lastname) VALUES(?, ?)";
-        Connection conn = getConnection();
-        if(conn != null){
-            try{
-                PreparedStatement ps = conn.prepareStatement(query);
-                ps.setString(1, firstname);
-                ps.setString(2, lastname);
-                ps.execute();
-            }catch(SQLException ex){
-                System.out.println("Error: " + ex.toString());
-            }
-        }
-    }
-    */
+     
     
     public List<Card> getListOfCards(long idacc){
         Connection conn = getConnection();
@@ -509,5 +470,128 @@ public class ConnectionProvider {
         }
     }
     
+    public void logTransaction(float amount, String description, int idemp, long srcAcc, long destAcc, int srcBank, int destBank){
+        String query = "INSERT INTO banktransactions(amount, transdatetime, description, idemp, sourceAcc, destinationAcc, srcBank, destBank) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+        String datetime = getDateTime();
+        Connection conn = getConnection();
+        if(conn != null){
+            try{
+                PreparedStatement ps = conn.prepareStatement(query);
+                ps.setFloat(1, amount);
+                ps.setString(2, datetime);
+                ps.setString(3, description);
+                ps.setInt(4, idemp);
+                ps.setLong(5, srcAcc);
+                ps.setLong(6, destAcc);
+                ps.setInt(7, srcBank);
+                ps.setInt(8, destBank);
+                ps.execute();
+                
+                conn.close();
+            }catch(SQLException ex){
+                System.out.println("Error: " + ex.toString());
+            }
+        }
+    }
+    /*
+    public void getAllTransactionsByAccountID(long idacc){
+        String query = "SELECT * FROM banktransactions WHERE"
+    }
+*/
+    public void insertNewClientIntoClients(String firstname, String lastname, String street, int houseNumber, String postCode, String city, String dob, String email, String username, String password) throws SQLException {
+        Connection conn = getConnection();
+        
+        String insertQueryClients = "INSERT INTO Clients (firstname, lastname) VALUES(?, ?)";
+        String insertQueryClientDetails = "INSERT INTO ClientDetails (idc, street, houseNumber, postcode, city, dob, email) VALUES(?,?,?,?,?,?,?)";
+        String insertQueryClientLogin = "INSERT INTO LoginClient (idc, username, password) VALUES(?,?,?)";
+
+        if(conn != null){
+            try{
+                conn.setAutoCommit(false);
+                
+                PreparedStatement ps = conn.prepareStatement(insertQueryClients);
+                ps.setString(1, firstname);
+                ps.setString(2, lastname);
+                ps.execute();
+                ps.close();
+                
+                int lastClientID = getLastClientID();
+                
+                ps = conn.prepareStatement(insertQueryClientDetails);
+                ps.setInt(1, lastClientID);
+                ps.setString(2, street);
+                ps.setInt(3, houseNumber);
+                ps.setString(4, postCode);
+                ps.setString(5, city);
+                ps.setString(6, getDateTime());
+                ps.setString(7, email);
+                ps.execute();
+                ps.close();
+                
+                ps = conn.prepareStatement(insertQueryClientLogin);
+                ps.setInt(1, lastClientID);
+                ps.setString(2, username);
+                ps.setString(3, password);
+                ps.execute();
+                ps.close();
+                
+                conn.commit();
+                
+            }catch(SQLException ex){
+                System.out.println("111Error: " + ex.toString());
+                if (conn != null) {
+                    try {
+                        System.out.print("Transaction is being rolled back");
+                        conn.rollback();
+                    } catch(SQLException excep) {
+                        System.out.println("Error: " + excep.toString());
+                    }
+                }
+            }finally {
+                conn.setAutoCommit(true);
+                conn.close();
+            }
+        }
+    }
     
+    public int getLastClientID(){
+        String query = "SELECT * FROM Clients";
+        Connection conn = getConnection();
+        
+        try {
+            PreparedStatement ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            int lastid = 0;
+            ResultSet rs = ps.executeQuery(query);
+            while(rs.next()){
+                lastid = rs.getInt(1);
+            }
+
+            conn.close();
+            return lastid;
+
+        } catch (SQLException ex){
+                System.out.println("Error: " + ex.toString());
+        }
+        return -1;
+    }
+    
+    public boolean isClientEmailInDB(String email){
+        Connection conn = getConnection();
+        String query = "SELECT * FROM ClientDetials WHERE email LIKE '" + email + "'";
+        boolean val = false;
+        try{
+            PreparedStatement ps = conn.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            
+            val = rs.next();
+
+            conn.close();
+            return val;
+            
+        }catch (SQLException e){
+            System.out.println("Error: " + e);
+        }
+        
+        return val;
+    }
 }

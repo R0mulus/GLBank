@@ -49,13 +49,13 @@
                   <Component id="txtNewClientCity" alignment="0" max="32767" attributes="0"/>
                   <Component id="txtNewClientLastName" alignment="0" max="32767" attributes="0"/>
                   <Component id="txtNewClientFirstName" alignment="0" max="32767" attributes="0"/>
-                  <Component id="txtNewClientDOB" alignment="0" max="32767" attributes="0"/>
                   <Component id="txtNewClientStreet" alignment="0" max="32767" attributes="0"/>
                   <Component id="txtNewClientEmail" alignment="1" max="32767" attributes="0"/>
                   <Component id="txtNewClientHousenumber" alignment="1" max="32767" attributes="0"/>
                   <Component id="txtNewClientPostcode" alignment="1" max="32767" attributes="0"/>
                   <Component id="txtNewClientUsername" alignment="1" max="32767" attributes="0"/>
                   <Component id="txtNewClientPassword" pref="149" max="32767" attributes="0"/>
+                  <Component id="jXDateDOB" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="76" max="-2" attributes="0"/>
           </Group>
@@ -77,7 +77,7 @@
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel8" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="txtNewClientDOB" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jXDateDOB" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -114,7 +114,7 @@
                   <Component id="txtNewClientPassword" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="37" max="32767" attributes="0"/>
+              <EmptySpace pref="35" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="btnNewClientCreate" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnNewClientCancel" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -195,8 +195,6 @@
     </Component>
     <Component class="javax.swing.JTextField" name="txtNewClientLastName">
     </Component>
-    <Component class="javax.swing.JTextField" name="txtNewClientDOB">
-    </Component>
     <Component class="javax.swing.JTextField" name="txtNewClientEmail">
     </Component>
     <Component class="javax.swing.JTextField" name="txtNewClientCity">
@@ -216,6 +214,8 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtNewClientPasswordActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="org.jdesktop.swingx.JXDatePicker" name="jXDateDOB">
     </Component>
   </SubComponents>
 </Form>

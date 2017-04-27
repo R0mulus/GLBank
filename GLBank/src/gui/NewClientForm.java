@@ -5,6 +5,17 @@
  */
 package gui;
 
+import database.ConnectionProvider;
+import static java.lang.Integer.parseInt;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Joseph
@@ -18,6 +29,8 @@ public class NewClientForm extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(null);
+        
+        
     }
 
     /**
@@ -43,7 +56,6 @@ public class NewClientForm extends javax.swing.JDialog {
         jLabel10 = new javax.swing.JLabel();
         txtNewClientFirstName = new javax.swing.JTextField();
         txtNewClientLastName = new javax.swing.JTextField();
-        txtNewClientDOB = new javax.swing.JTextField();
         txtNewClientEmail = new javax.swing.JTextField();
         txtNewClientCity = new javax.swing.JTextField();
         txtNewClientStreet = new javax.swing.JTextField();
@@ -51,6 +63,7 @@ public class NewClientForm extends javax.swing.JDialog {
         txtNewClientPostcode = new javax.swing.JTextField();
         txtNewClientUsername = new javax.swing.JTextField();
         txtNewClientPassword = new javax.swing.JTextField();
+        jXDateDOB = new org.jdesktop.swingx.JXDatePicker();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -128,13 +141,13 @@ public class NewClientForm extends javax.swing.JDialog {
                     .addComponent(txtNewClientCity, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtNewClientLastName, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtNewClientFirstName, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtNewClientDOB, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtNewClientStreet, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtNewClientEmail)
                     .addComponent(txtNewClientHousenumber)
                     .addComponent(txtNewClientPostcode)
                     .addComponent(txtNewClientUsername)
-                    .addComponent(txtNewClientPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE))
+                    .addComponent(txtNewClientPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
+                    .addComponent(jXDateDOB, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(76, 76, 76))
         );
         layout.setVerticalGroup(
@@ -151,7 +164,7 @@ public class NewClientForm extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(txtNewClientDOB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jXDateDOB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -180,7 +193,7 @@ public class NewClientForm extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtNewClientPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel10))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnNewClientCreate)
                     .addComponent(btnNewClientCancel))
@@ -203,7 +216,44 @@ public class NewClientForm extends javax.swing.JDialog {
     }//GEN-LAST:event_txtNewClientPasswordActionPerformed
 
     private void btnNewClientCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewClientCreateActionPerformed
-        // TODO add your handling code here:
+        
+        try {
+            ConnectionProvider conn = new ConnectionProvider();
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            String dateString = formatter.format(jXDateDOB.getDate());
+            
+            if(!isNameValid(txtNewClientFirstName.getText())){
+                JOptionPane.showMessageDialog(null, "First name must have a length of 2 to 20 characters!");
+            }else if(!isNameValid(txtNewClientLastName.getText())){
+                JOptionPane.showMessageDialog(null, "Last name must have a length of 2 to 20 characters!");
+            }else if(!isDOBValid(dateString)){
+                JOptionPane.showMessageDialog(null, "Invalid date of birth!");
+            }else if(!isEmailValid(txtNewClientEmail.getText())){
+                JOptionPane.showMessageDialog(null, "Invalid email!");
+            if(!(conn.isClientEmailInDB(txtNewClientEmail.getText()))){
+                JOptionPane.showMessageDialog(null, "Email already in use!");
+            }
+            }else if(!isNameValid(txtNewClientCity.getText())){
+                JOptionPane.showMessageDialog(null, "Invalid city name!");
+            }else if(!isNumberValid(txtNewClientHousenumber.getText())){
+                JOptionPane.showMessageDialog(null, "Invalid house number!");
+            }else if(!isPostCodeValid(txtNewClientPostcode.getText())){
+                JOptionPane.showMessageDialog(null, "Invalid post code!");
+            }else if(!isUserNameValid(txtNewClientUsername.getText())){
+                JOptionPane.showMessageDialog(null, "Username must be at least 6 to 10 characters long and contain letters or digits.");
+            }else if(!isUserNameValid(txtNewClientPassword.getText())){
+                JOptionPane.showMessageDialog(null, "Password must be at least 6 to 10 characters long and contain letters or digits.");
+            }else{
+                conn.insertNewClientIntoClients(txtNewClientFirstName.getText(), txtNewClientLastName.getText(), txtNewClientStreet.getText(), parseInt(txtNewClientHousenumber.getText()),
+                            txtNewClientPostcode.getText(), txtNewClientCity.getText(),dateString, txtNewClientEmail.getText(), txtNewClientUsername.getText(), txtNewClientPassword.getText());
+                JOptionPane.showMessageDialog(null, "Client " + txtNewClientFirstName.getText() + " " + txtNewClientLastName.getText() + " added successfully");
+                this.dispose();
+            }
+        } 
+        catch (Exception ex) { 
+            System.out.println("Error: " + ex);
+            JOptionPane.showMessageDialog(null, "Empty field/fields!");
+        }
     }//GEN-LAST:event_btnNewClientCreateActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -219,8 +269,8 @@ public class NewClientForm extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private org.jdesktop.swingx.JXDatePicker jXDateDOB;
     private javax.swing.JTextField txtNewClientCity;
-    private javax.swing.JTextField txtNewClientDOB;
     private javax.swing.JTextField txtNewClientEmail;
     private javax.swing.JTextField txtNewClientFirstName;
     private javax.swing.JTextField txtNewClientHousenumber;
@@ -230,4 +280,49 @@ public class NewClientForm extends javax.swing.JDialog {
     private javax.swing.JTextField txtNewClientStreet;
     private javax.swing.JTextField txtNewClientUsername;
     // End of variables declaration//GEN-END:variables
+    
+    public boolean isNameValid(String text){
+        try {
+            return !(text.length() < 2 && text.length() > 20);
+        }catch(Exception e){
+            System.out.println("Error: " + e);
+        }
+        return false;
+    }
+    
+    public boolean isDOBValid(String newDate){
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String dateString = formatter.format(date);
+        
+        return dateString.compareTo(newDate) > 0;
+    }
+    
+    public boolean isEmailValid(String email) {
+        String emailRegex = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
+        Pattern pattern = Pattern.compile(emailRegex);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+    
+    public boolean isNumberValid(String text){
+        try {
+            Integer.parseInt(text);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public boolean isPostCodeValid(String text){
+        return (text.length() <= 5 && text.length() > 1);
+    }
+    
+    public boolean isUserNameValid(String text){
+        String usernameRegex = "^\\w{6,10}$";
+        Pattern pattern = Pattern.compile(usernameRegex);
+        Matcher matcher = pattern.matcher(text);
+        return matcher.matches();
+    }
+
 }
