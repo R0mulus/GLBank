@@ -1,1 +1,10 @@
 E:\Akademia Sovy\4.C#\AtmSoftware\AtmSoftware\bin\Debug\AtmSoftware.exe.config
+E:\Akademia Sovy\4.C#\AtmSoftware\AtmSoftware\bin\Debug\AtmSoftware.exe
+E:\Akademia Sovy\4.C#\AtmSoftware\AtmSoftware\bin\Debug\AtmSoftware.pdb
+E:\Akademia Sovy\4.C#\AtmSoftware\AtmSoftware\obj\Debug\AtmSoftware.csprojResolveAssemblyReference.cache
+E:\Akademia Sovy\4.C#\AtmSoftware\AtmSoftware\obj\Debug\AtmSoftware.Form1.resources
+E:\Akademia Sovy\4.C#\AtmSoftware\AtmSoftware\obj\Debug\AtmSoftware.Properties.Resources.resources
+E:\Akademia Sovy\4.C#\AtmSoftware\AtmSoftware\obj\Debug\AtmSoftware.csproj.GenerateResource.Cache
+E:\Akademia Sovy\4.C#\AtmSoftware\AtmSoftware\obj\Debug\AtmSoftware.exe
+E:\Akademia Sovy\4.C#\AtmSoftware\AtmSoftware\obj\Debug\AtmSoftware.pdb
+E:\Akademia Sovy\4.C#\AtmSoftware\AtmSoftware\obj\Debug\AtmSoftware.CardInsertForm.resources
