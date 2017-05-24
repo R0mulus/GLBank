@@ -27,9 +27,38 @@ namespace AtmSoftware
         private void btnOK_Click(object sender, EventArgs e)
         {
             this.Hide();
-            Form1 form1 = new Form1(1111222233334444);
-            form1.ShowDialog();
-            this.Show();
+            long cardNum = Convert.ToInt64(txtBoxCardNum.Text);
+            DatabaseConnection database = new DatabaseConnection();
+            if (database.existsCard(cardNum))
+            {
+                Form1 form1 = new Form1(cardNum);
+                form1.ShowDialog();
+                this.Show();
+            }
+            else
+            {
+                MessageBox.Show("Invalid card number!");
+                txtBoxCardNum.Text = "";
+                this.Show();
+            }
+            
+        }
+
+        private long convertToLong(string text)
+        {
+            long num = 0;
+
+            try {
+                
+                if (text.Length > 0) num = Convert.ToInt64(text);
+                
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show("Error: " + e);
+            }
+
+            return num;
         }
     }
 }

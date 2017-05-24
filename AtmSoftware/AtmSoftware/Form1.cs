@@ -27,16 +27,20 @@ namespace AtmSoftware
         private State state;
         private Language language;
         private long cardNumber;
-        private String pin;
+        private string pin;
+        private string hiddenPin;
+        private DatabaseConnection database;
 
         public Form1(long cardNumber)
         {
             InitializeComponent();
-            state = State.PIN;
+            state = State.LANGUAGE;
             this.CenterToScreen();
             pin = "";
+            hiddenPin = "";
             setBackground(Color.White, "");
-            
+            this.cardNumber = cardNumber;
+            database = new DatabaseConnection();
             printScreen();
             
         }
@@ -59,6 +63,7 @@ namespace AtmSoftware
                     {
                         newCanvas();
                         drawText("Zadajte PIN", 20, 80, 20);
+                        drawText("" + hiddenPin, 20, 80, 175);
                         saveImage("zadajtePIN.png");
                         break;
                     }
@@ -87,8 +92,8 @@ namespace AtmSoftware
                 case State.SHOWBALANCE:
                     {
                         newCanvas();
-                        drawText("Zostatok", 20, 120, 20);
-                        drawText("Nič moc", 15, 80, 75);
+                        drawText("Zostatok", 20, 90, 20);
+                        drawText("Nič moc", 15, 100, 75);
                         saveImage("zostatok.png");
                         break;
                     }
@@ -109,7 +114,7 @@ namespace AtmSoftware
                 case State.INVALIDCARD:
                     {
                         newCanvas();
-                        drawText("Neplatná karta!", 20, 20, 20);
+                        drawText("Zablokovaná karta!", 20, 20, 20);
                         saveImage("neplatnaKarta.png");
                         break;
                     }
@@ -157,7 +162,9 @@ namespace AtmSoftware
            if(state == State.PIN && pin.Length < 4)
             {
                 pin = pin + "1";
+                hiddenPin += "*";
             }
+            printScreen();
             
         }
 
@@ -166,7 +173,9 @@ namespace AtmSoftware
             if (state == State.PIN && pin.Length < 4)
             {
                 pin = pin + "9";
+                hiddenPin += "*";
             }
+            printScreen();
         }
 
         private void button19_Click(object sender, EventArgs e)
@@ -174,7 +183,9 @@ namespace AtmSoftware
             if (state == State.PIN && pin.Length < 4)
             {
                 pin = pin + "6";
+                hiddenPin += "*";
             }
+            printScreen();
         }
 
         private void button20_Click(object sender, EventArgs e)
@@ -182,7 +193,9 @@ namespace AtmSoftware
             if (state == State.PIN && pin.Length < 4)
             {
                 pin = pin + "3";
+                hiddenPin += "*";
             }
+            printScreen();
         }
 
         private void button13_Click(object sender, EventArgs e)
@@ -190,7 +203,9 @@ namespace AtmSoftware
             if (state == State.PIN && pin.Length < 4)
             {
                 pin = pin + "0";
+                hiddenPin += "*";
             }
+            printScreen();
         }
 
         private void button14_Click(object sender, EventArgs e)
@@ -198,7 +213,9 @@ namespace AtmSoftware
             if (state == State.PIN && pin.Length < 4)
             {
                 pin = pin + "8";
+                hiddenPin += "*";
             }
+            printScreen();
         }
 
         private void button15_Click(object sender, EventArgs e)
@@ -206,7 +223,9 @@ namespace AtmSoftware
             if (state == State.PIN && pin.Length < 4)
             {
                 pin = pin + "5";
+                hiddenPin += "*";
             }
+            printScreen();
         }
 
         private void button16_Click(object sender, EventArgs e)
@@ -214,7 +233,9 @@ namespace AtmSoftware
             if (state == State.PIN && pin.Length < 4)
             {
                 pin = pin + "2";
+                hiddenPin += "*";
             }
+            printScreen();
         }
 
         private void button9_Click(object sender, EventArgs e)
@@ -223,12 +244,16 @@ namespace AtmSoftware
             if (state == State.PIN && pin.Length > 1)
             {
                 pin = pin.Substring(0, pin.Length - 1);
+                hiddenPin = hiddenPin.Substring(0, hiddenPin.Length - 1);
+                printScreen();
             }
             else if(state == State.PIN)
             {
                 pin = "";
+                hiddenPin = "";
+                printScreen();
             }
-            Console.Write(pin);
+            Console.Write(pin + " ");
 
         }
 
@@ -237,7 +262,9 @@ namespace AtmSoftware
             if (state == State.PIN && pin.Length < 4)
             {
                 pin = pin + "7";
+                hiddenPin += "*";
             }
+            printScreen();
         }
 
         private void button11_Click(object sender, EventArgs e)
@@ -245,11 +272,14 @@ namespace AtmSoftware
             if (state == State.PIN && pin.Length < 4)
             {
                 pin = pin + "4";
+                hiddenPin += "*";
             }
+            printScreen();
         }
 
         private void button17_Click(object sender, EventArgs e)
         {
+            //todo activate check if pin is ok
             if(state == State.PIN) Console.Write(pin);
 
         }
@@ -264,8 +294,17 @@ namespace AtmSoftware
 
         private void checkCard()
         {
-            //TODO check card
-            state = State.PIN;
+            Console.Write(cardNumber);
+            if (!database.isCardBlocked(cardNumber))
+            {
+                state = State.PIN;
+                printScreen();
+            }
+            else
+            {
+                state = State.INVALIDCARD;
+                printScreen();
+            }
         }
 
         private void checkPinCode()

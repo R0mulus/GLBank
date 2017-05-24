@@ -8,3 +8,5 @@ E:\Akademia Sovy\4.C#\AtmSoftware\AtmSoftware\obj\Debug\AtmSoftware.csproj.Gener
 E:\Akademia Sovy\4.C#\AtmSoftware\AtmSoftware\obj\Debug\AtmSoftware.exe
 E:\Akademia Sovy\4.C#\AtmSoftware\AtmSoftware\obj\Debug\AtmSoftware.pdb
 E:\Akademia Sovy\4.C#\AtmSoftware\AtmSoftware\obj\Debug\AtmSoftware.CardInsertForm.resources
+E:\Akademia Sovy\4.C#\AtmSoftware\AtmSoftware\bin\Debug\MySql.Data.dll
+E:\Akademia Sovy\4.C#\AtmSoftware\AtmSoftware\bin\Debug\MySql.Data.xml
