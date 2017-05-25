@@ -27,7 +27,7 @@ namespace AtmSoftware
         private void btnOK_Click(object sender, EventArgs e)
         {
             this.Hide();
-            long cardNum = Convert.ToInt64(txtBoxCardNum.Text);
+            long cardNum = convertToLong(txtBoxCardNum.Text);
             DatabaseConnection database = new DatabaseConnection();
             if (database.existsCard(cardNum))
             {
@@ -51,6 +51,10 @@ namespace AtmSoftware
             try {
                 
                 if (text.Length > 0) num = Convert.ToInt64(text);
+                else
+                {
+                    MessageBox.Show("Please write your card number!");
+                }
                 
             }
             catch(Exception e)

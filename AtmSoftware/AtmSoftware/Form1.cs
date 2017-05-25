@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 enum State
 {
-    LANGUAGE, PIN, PINOK, PINWRONG, INVALIDCARD, WITHDRAW, SHOWBALANCE, CHANGEPIN
+    LANGUAGE, PIN, PINOK, PINWRONG, BLOCKEDCARD, WITHDRAW, SHOWBALANCE, CHANGEPIN
 }
 
 enum Language
@@ -30,6 +30,7 @@ namespace AtmSoftware
         private string pin;
         private string hiddenPin;
         private DatabaseConnection database;
+        private float balance;
 
         public Form1(long cardNumber)
         {
@@ -47,78 +48,161 @@ namespace AtmSoftware
 
         private void printScreen()
         {
-            switch (state)
+
+            switch (language)
             {
-                case State.LANGUAGE:
+                case Language.SVK:
+                    switch (state)
                     {
-                        newCanvas();
-                        drawText("Vyberte si jazyk", 20, 40, 20);
-                        drawText("SVK", 15, 10, 250);
-                        drawText("ENG", 15, 260, 250);
-                        saveImage("picBoxLayout.png");
-                        break;
+                        case State.LANGUAGE:
+                            {
+                                newCanvas();
+                                drawText("Vyberte si jazyk", 20, 40, 20);
+                                drawText("SVK", 15, 10, 250);
+                                drawText("ENG", 15, 260, 250);
+                                saveImage("picBoxLayout.png");
+                                break;
+                            }
+
+                        case State.PIN:
+                            {
+                                newCanvas();
+                                drawText("Zadajte PIN", 20, 80, 20);
+                                drawText("" + hiddenPin, 20, 80, 175);
+                                saveImage("zadajtePIN.png");
+                                break;
+                            }
+                        case State.PINOK:
+                            {
+                                newCanvas();
+                                drawText("Výber z účtu", 15, 10, 5);
+                                drawText("Zostatok na účte", 15, 10, 85);
+                                drawText("Zmena pinu", 15, 10, 165);
+                                saveImage("pinOKsvk.png");
+                                break;
+                            }
+                        case State.WITHDRAW:
+                            {
+                                newCanvas();
+                                drawText("10", 15, 10, 5);
+                                drawText("20", 15, 10, 85);
+                                drawText("50", 15, 10, 165);
+                                drawText("Späť", 15, 10, 250);
+                                drawText("100", 15, 260, 5);
+                                drawText("200", 15, 260, 85);
+                                drawText("500", 15, 260, 165);
+                                saveImage("vyberPeniaze.png");
+                                break;
+                            }
+                        case State.SHOWBALANCE:
+                            {
+                                newCanvas();
+                                drawText("Zostatok", 20, 90, 20);
+                                drawText("" + balance, 15, 100, 75);
+                                drawText("Späť", 15, 10, 250);
+                                saveImage("zostatok.png");
+                                break;
+                            }
+                        case State.CHANGEPIN:
+                            {
+                                newCanvas();
+                                drawText("Zmena pinu", 20, 85, 20);
+                                saveImage("zmenaPinu.png");
+                                break;
+                            }
+                        case State.PINWRONG:
+                            {
+                                newCanvas();
+                                drawText("Chybný pin!", 20, 85, 20);
+                                saveImage("chybnyPin.png");
+                                break;
+                            }
+                        case State.BLOCKEDCARD:
+                            {
+                                newCanvas();
+                                drawText("Zablokovaná karta!", 20, 20, 20);
+                                saveImage("neplatnaKarta.png");
+                                break;
+                            }
                     }
-                    
-                case State.PIN:
+                    break;
+                case Language.ENG:
+                    switch (state)
                     {
-                        newCanvas();
-                        drawText("Zadajte PIN", 20, 80, 20);
-                        drawText("" + hiddenPin, 20, 80, 175);
-                        saveImage("zadajtePIN.png");
-                        break;
+                        case State.LANGUAGE:
+                            {
+                                newCanvas();
+                                drawText("Choose language", 20, 40, 20);
+                                drawText("SVK", 15, 10, 250);
+                                drawText("ENG", 15, 260, 250);
+                                saveImage("picBoxLayoutENG.png");
+                                break;
+                            }
+
+                        case State.PIN:
+                            {
+                                newCanvas();
+                                drawText("Enter PIN", 20, 80, 20);
+                                drawText("" + hiddenPin, 20, 80, 175);
+                                saveImage("zadajtePINENG.png");
+                                break;
+                            }
+                        case State.PINOK:
+                            {
+                                newCanvas();
+                                drawText("Withdrawal", 15, 10, 5);
+                                drawText("Account balance", 15, 10, 85);
+                                drawText("Change pin", 15, 10, 165);
+                                saveImage("pinOKeng.png");
+                                break;
+                            }
+                        case State.WITHDRAW:
+                            {
+                                newCanvas();
+                                drawText("10", 15, 10, 5);
+                                drawText("20", 15, 10, 85);
+                                drawText("50", 15, 10, 165);
+                                drawText("Back", 15, 10, 250);
+                                drawText("100", 15, 260, 5);
+                                drawText("200", 15, 260, 85);
+                                drawText("500", 15, 260, 165);
+                                saveImage("vyberPeniazeENG.png");
+                                break;
+                            }
+                        case State.SHOWBALANCE:
+                            {
+                                newCanvas();
+                                drawText("Balance", 20, 90, 20);
+                                drawText("" + balance, 15, 100, 75);
+                                drawText("Back", 15, 10, 250);
+                                saveImage("zostatokENG.png");
+                                break;
+                            }
+                        case State.CHANGEPIN:
+                            {
+                                newCanvas();
+                                drawText("Change pin", 20, 85, 20);
+                                saveImage("zmenaPinuENG.png");
+                                break;
+                            }
+                        case State.PINWRONG:
+                            {
+                                newCanvas();
+                                drawText("Wrong pin!", 20, 85, 20);
+                                saveImage("chybnyPinENG.png");
+                                break;
+                            }
+                        case State.BLOCKEDCARD:
+                            {
+                                newCanvas();
+                                drawText("Card is blocked!", 20, 20, 20);
+                                saveImage("neplatnaKartaENG.png");
+                                break;
+                            }
                     }
-                case State.PINOK:
-                    {
-                        newCanvas();
-                        drawText("Výber z účtu", 15, 10, 5);
-                        drawText("Zostatok na účte", 15, 10, 85);
-                        drawText("Zmena pinu", 15, 10, 165);
-                        saveImage("pinOKsvk.png");
-                        break;
-                    }
-                case State.WITHDRAW:
-                    {
-                        newCanvas();
-                        drawText("10", 15, 10, 5);
-                        drawText("20", 15, 10, 85);
-                        drawText("50", 15, 10, 165);
-                        drawText("Späť", 15, 10, 250);
-                        drawText("100", 15, 260, 5);
-                        drawText("200", 15, 260, 85);
-                        drawText("500", 15, 260, 165);
-                        saveImage("vyberPeniaze.png");
-                        break;
-                    }
-                case State.SHOWBALANCE:
-                    {
-                        newCanvas();
-                        drawText("Zostatok", 20, 90, 20);
-                        drawText("Nič moc", 15, 100, 75);
-                        saveImage("zostatok.png");
-                        break;
-                    }
-                case State.CHANGEPIN:
-                    {
-                        newCanvas();
-                        drawText("Zmena pinu", 20, 85, 20);
-                        saveImage("zmenaPinu.png");
-                        break;
-                    }
-                case State.PINWRONG:
-                    {
-                        newCanvas();
-                        drawText("Chybný pin!", 20, 85, 20);
-                        saveImage("chybnyPin.png");
-                        break;
-                    }
-                case State.INVALIDCARD:
-                    {
-                        newCanvas();
-                        drawText("Zablokovaná karta!", 20, 20, 20);
-                        saveImage("neplatnaKarta.png");
-                        break;
-                    }
+                    break;
             }
+            
         }
 
         private void setBackground(Color col, string paperFile)
@@ -279,8 +363,12 @@ namespace AtmSoftware
 
         private void button17_Click(object sender, EventArgs e)
         {
-            //todo activate check if pin is ok
-            if(state == State.PIN) Console.Write(pin);
+            switch (state)
+            {
+                case State.PIN:
+                    checkPinCode();
+                    break;
+            } 
 
         }
 
@@ -294,24 +382,32 @@ namespace AtmSoftware
 
         private void checkCard()
         {
-            Console.Write(cardNumber);
-            if (!database.isCardBlocked(cardNumber))
+            if (database.isCardBlocked(cardNumber))
             {
-                state = State.PIN;
+                state = State.BLOCKEDCARD;
                 printScreen();
             }
             else
             {
-                state = State.INVALIDCARD;
+                state = State.PIN;
                 printScreen();
             }
+            
         }
 
         private void checkPinCode()
         {
-            //todo spravny
-
-            //todo nespravny
+            int pinToInt = Convert.ToInt16(pin);
+            if (database.isPinCorrect(cardNumber, pinToInt))
+            {
+                state = State.PINOK;
+                printScreen();
+            }
+            else
+            {
+                //toto nespravny pin
+                MessageBox.Show("Wrong pin!");
+            }
         }
 
         private void btnMain4_Click(object sender, EventArgs e)
@@ -319,9 +415,18 @@ namespace AtmSoftware
             switch (state)
             {
                 case State.LANGUAGE:
-                    this.language = Language.SVK;
+                    language = Language.SVK;
                     checkCard();
                     break;
+                case State.WITHDRAW:
+                    state = State.PINOK;
+                    printScreen();
+                    break;
+                case State.SHOWBALANCE:
+                    state = State.PINOK;
+                    printScreen();
+                    break;
+                
             }
         }
 
@@ -338,47 +443,45 @@ namespace AtmSoftware
 
         private void btnMain1_Click(object sender, EventArgs e)
         {
+            switch (state)
+            {
+                case State.PINOK:
+                    state = State.WITHDRAW;
+                    printScreen();
+                    break;
+                case State.WITHDRAW:
+                    withdrawal(10);
+                    break;
+            }
+        }
 
-            if (state == State.PIN)
+        private void withdrawal(int sum)
+        {
+            if (database.withdrawFromAccount(sum, cardNumber))
             {
-                state = State.LANGUAGE;
+                MessageBox.Show(sum + " withdrew!");
             }
-            else if (state == State.LANGUAGE)
-            {
-                state = State.CHANGEPIN;
-            }
-            else if(state == State.CHANGEPIN)
-            {
-                state = State.PINOK;
-            }
-            else if (state == State.PINOK)
-            {
-                state = State.PINWRONG;
-            }
-            else if (state == State.PINWRONG)
-            {
-                state = State.INVALIDCARD;
-            }
-            else if (state == State.INVALIDCARD)
-            {
-                state = State.SHOWBALANCE;
-            }
-            else if(state == State.SHOWBALANCE)
-            {
-                state = State.WITHDRAW;
-            }
-
             else
             {
-                state = State.PIN;
+                MessageBox.Show("Not enough money on card!");
             }
+        }
 
+        private void showBalance()
+        {
+            state = State.SHOWBALANCE;
+            balance = database.getBalance(cardNumber);
             printScreen();
         }
 
         private void btnMain2_Click(object sender, EventArgs e)
         {
-
+            switch (state)
+            {
+                case State.PINOK:
+                    showBalance();
+                    break;
+            }
         }
 
         private void btnMain3_Click(object sender, EventArgs e)
