@@ -29,6 +29,7 @@ namespace AtmSoftware
         private long cardNumber;
         private string pin;
         private string hiddenPin;
+        private string newPin;
         private DatabaseConnection database;
         private float balance;
 
@@ -39,6 +40,7 @@ namespace AtmSoftware
             this.CenterToScreen();
             pin = "";
             hiddenPin = "";
+            newPin = "";
             setBackground(Color.White, "");
             this.cardNumber = cardNumber;
             database = new DatabaseConnection();
@@ -77,7 +79,7 @@ namespace AtmSoftware
                                 newCanvas();
                                 drawText("Výber z účtu", 15, 10, 5);
                                 drawText("Zostatok na účte", 15, 10, 85);
-                                drawText("Zmena pinu", 15, 10, 165);
+                                drawText("Zmeniť pin", 15, 10, 165);
                                 saveImage("pinOKsvk.png");
                                 break;
                             }
@@ -106,7 +108,8 @@ namespace AtmSoftware
                         case State.CHANGEPIN:
                             {
                                 newCanvas();
-                                drawText("Zmena pinu", 20, 85, 20);
+                                drawText("Zmena pin-u", 20, 85, 20);
+                                drawText("Novy pin: " + hiddenPin, 20, 80, 175);
                                 saveImage("zmenaPinu.png");
                                 break;
                             }
@@ -181,7 +184,8 @@ namespace AtmSoftware
                         case State.CHANGEPIN:
                             {
                                 newCanvas();
-                                drawText("Change pin", 20, 85, 20);
+                                drawText("Changing pin", 20, 85, 20);
+                                drawText("New pin: " + hiddenPin, 20, 80, 175);
                                 saveImage("zmenaPinuENG.png");
                                 break;
                             }
@@ -248,6 +252,11 @@ namespace AtmSoftware
                 pin = pin + "1";
                 hiddenPin += "*";
             }
+            else if (state == State.CHANGEPIN && newPin.Length < 4)
+            {
+                newPin = pin + "1";
+                hiddenPin += "*";
+            }
             printScreen();
             
         }
@@ -257,6 +266,11 @@ namespace AtmSoftware
             if (state == State.PIN && pin.Length < 4)
             {
                 pin = pin + "9";
+                hiddenPin += "*";
+            }
+            else if (state == State.CHANGEPIN && newPin.Length < 4)
+            {
+                newPin = newPin + "9";
                 hiddenPin += "*";
             }
             printScreen();
@@ -269,6 +283,11 @@ namespace AtmSoftware
                 pin = pin + "6";
                 hiddenPin += "*";
             }
+            else if (state == State.CHANGEPIN && newPin.Length < 4)
+            {
+                newPin = newPin + "6";
+                hiddenPin += "*";
+            }
             printScreen();
         }
 
@@ -277,6 +296,11 @@ namespace AtmSoftware
             if (state == State.PIN && pin.Length < 4)
             {
                 pin = pin + "3";
+                hiddenPin += "*";
+            }
+            else if (state == State.CHANGEPIN && newPin.Length < 4)
+            {
+                newPin = newPin + "3";
                 hiddenPin += "*";
             }
             printScreen();
@@ -289,6 +313,11 @@ namespace AtmSoftware
                 pin = pin + "0";
                 hiddenPin += "*";
             }
+            else if (state == State.CHANGEPIN && newPin.Length < 4)
+            {
+                newPin = newPin + "0";
+                hiddenPin += "*";
+            }
             printScreen();
         }
 
@@ -297,6 +326,11 @@ namespace AtmSoftware
             if (state == State.PIN && pin.Length < 4)
             {
                 pin = pin + "8";
+                hiddenPin += "*";
+            }
+            else if (state == State.CHANGEPIN && newPin.Length < 4)
+            {
+                newPin = newPin + "8";
                 hiddenPin += "*";
             }
             printScreen();
@@ -309,6 +343,11 @@ namespace AtmSoftware
                 pin = pin + "5";
                 hiddenPin += "*";
             }
+            else if (state == State.CHANGEPIN && newPin.Length < 4)
+            {
+                newPin = newPin + "5";
+                hiddenPin += "*";
+            }
             printScreen();
         }
 
@@ -317,6 +356,11 @@ namespace AtmSoftware
             if (state == State.PIN && pin.Length < 4)
             {
                 pin = pin + "2";
+                hiddenPin += "*";
+            }
+            else if (state == State.CHANGEPIN && newPin.Length < 4)
+            {
+                newPin = newPin + "2";
                 hiddenPin += "*";
             }
             printScreen();
@@ -337,6 +381,17 @@ namespace AtmSoftware
                 hiddenPin = "";
                 printScreen();
             }
+            else if(state == State.CHANGEPIN && newPin.Length > 1)
+            {
+                newPin = newPin.Substring(0, newPin.Length - 1);
+                hiddenPin = hiddenPin.Substring(0, hiddenPin.Length - 1);
+                printScreen();
+            }else if (state == State.CHANGEPIN)
+            {
+                newPin = "";
+                hiddenPin = "";
+                printScreen();
+            }
             Console.Write(pin + " ");
 
         }
@@ -346,6 +401,11 @@ namespace AtmSoftware
             if (state == State.PIN && pin.Length < 4)
             {
                 pin = pin + "7";
+                hiddenPin += "*";
+            }
+            else if (state == State.CHANGEPIN && newPin.Length < 4)
+            {
+                newPin = newPin + "7";
                 hiddenPin += "*";
             }
             printScreen();
@@ -358,6 +418,11 @@ namespace AtmSoftware
                 pin = pin + "4";
                 hiddenPin += "*";
             }
+            else if (state == State.CHANGEPIN && newPin.Length < 4)
+            {
+                newPin = newPin + "4";
+                hiddenPin += "*";
+            }
             printScreen();
         }
 
@@ -367,8 +432,25 @@ namespace AtmSoftware
             {
                 case State.PIN:
                     checkPinCode();
+                    printScreen();
+                    break;
+                case State.CHANGEPIN:
+                    changePin();
+                    printScreen();
                     break;
             } 
+
+        }
+
+        private void changePin()
+        {
+            
+            int newPinToInt = Convert.ToInt16(newPin);
+            database.changePin(cardNumber, newPinToInt);
+            state = State.PINOK;
+            newPin = "";
+            hiddenPin = "";
+            MessageBox.Show("Pin changed!");
 
         }
 
@@ -401,11 +483,12 @@ namespace AtmSoftware
             if (database.isPinCorrect(cardNumber, pinToInt))
             {
                 state = State.PINOK;
-                printScreen();
+                pin = "";
+                hiddenPin = "";
             }
             else
             {
-                //toto nespravny pin
+                //todo nespravny pin
                 MessageBox.Show("Wrong pin!");
             }
         }
@@ -438,6 +521,7 @@ namespace AtmSoftware
                     this.language = Language.ENG;
                     checkCard();
                     break;
+                    
             }
         }
 
@@ -481,27 +565,58 @@ namespace AtmSoftware
                 case State.PINOK:
                     showBalance();
                     break;
+                case State.WITHDRAW:
+                    withdrawal(20);
+                    break;
             }
         }
 
         private void btnMain3_Click(object sender, EventArgs e)
         {
-
+            switch (state)
+            {
+                case State.WITHDRAW:
+                    withdrawal(50);
+                    break;
+                case State.PINOK:
+                    state = State.CHANGEPIN;
+                    printScreen();
+                    break;
+                      
+            }
         }
 
         private void btnMain5_Click(object sender, EventArgs e)
         {
+            switch (state)
+            {
+                case State.WITHDRAW:
+                    withdrawal(100);
+                    break;
 
+            }
         }
 
         private void btnMain6_Click(object sender, EventArgs e)
         {
+            switch (state)
+            {
+                case State.WITHDRAW:
+                    withdrawal(200);
+                    break;
 
+            }
         }
 
         private void btnMain7_Click(object sender, EventArgs e)
         {
+            switch (state)
+            {
+                case State.WITHDRAW:
+                    withdrawal(500);
+                    break;
 
+            }
         }
     }
 }

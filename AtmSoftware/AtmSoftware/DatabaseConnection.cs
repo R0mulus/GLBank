@@ -41,7 +41,7 @@ namespace AtmSoftware
 
         public bool existsCard(long cardNum)
         {
-            String query = "SELECT idCard FROM Cards WHERE cardNumber LIKE " + cardNum;
+            string query = "SELECT idCard FROM Cards WHERE cardNumber LIKE " + cardNum;
             MySqlConnection conn = getConnection();
             if(conn != null)
             {
@@ -57,9 +57,26 @@ namespace AtmSoftware
             return false;
         }
 
+        private int getIdCard(long cardNum)
+        {
+            int idCard = 0;
+            string query = "SELECT idCard FROM Cards WHERE cardNumber LIKE " + cardNum;
+            MySqlConnection conn = getConnection();
+            if (conn != null)
+            {
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+
+                var str = cmd.ExecuteScalar();
+                idCard = Convert.ToInt32(str);
+
+                return idCard;
+            }
+            return idCard;
+        }
+
         public bool isCardBlocked(long cardNum)
         {
-            String query = "SELECT blocked FROM Cards WHERE cardNumber LIKE " + cardNum;
+            string query = "SELECT blocked FROM Cards WHERE cardNumber LIKE " + cardNum;
             MySqlConnection conn = getConnection();
             if (conn != null)
             {
@@ -80,7 +97,7 @@ namespace AtmSoftware
 
         public bool isPinCorrect(long cardNum, int pin)
         {
-            String query = "SELECT pin FROM Cards WHERE cardNumber LIKE " + cardNum;
+            string query = "SELECT pin FROM Cards WHERE cardNumber LIKE " + cardNum;
             MySqlConnection conn = getConnection();
             if (conn != null)
             {
@@ -102,7 +119,7 @@ namespace AtmSoftware
         public float getBalance(long cardNum)
         {
             float balance = 0;
-            String query = "SELECT balance FROM Accounts " + 
+            string query = "SELECT balance FROM Accounts " + 
                 "INNER JOIN Cards ON Accounts.idacc = Cards.idacc " +
                 "WHERE cardNumber LIKE " + cardNum;
             MySqlConnection conn = getConnection();
@@ -117,9 +134,10 @@ namespace AtmSoftware
             }
             return balance;
         }
-
+        
         public bool withdrawFromAccount(int withdrawal, long cardNum)
         {
+            int idCard = getIdCard(cardNum);
             if(isBalanceSmallerOrSameThanWithdrawal(withdrawal, cardNum))
             {
                 string query = "UPDATE Accounts " + 
@@ -127,26 +145,65 @@ namespace AtmSoftware
                     "SET balance = balance - " + withdrawal +
                     " WHERE Cards.cardNumber LIKE " + cardNum;
 
+                string query2 = "INSERT INTO atmwithdrawals " + 
+                    "(amount, idatm, idcard) " + 
+                    "VALUES (" + withdrawal + ", 1, " + idCard + ")";
+
                 MySqlConnection conn = getConnection();
-                if (conn != null)
+                MySqlTransaction trans = null;
+                MySqlCommand cmd = new MySqlCommand();
+
+                try
                 {
-                    MySqlCommand cmd = new MySqlCommand(query, conn);
-                    cmd.ExecuteNonQuery();
-                    return true;
+                    if (conn != null)
+                    {
+                        
+                        
+                        trans = conn.BeginTransaction();
+                        
+                        cmd = new MySqlCommand(query, conn);
+                        cmd.ExecuteNonQuery();
+                        cmd = new MySqlCommand(query2, conn);
+                        cmd.ExecuteNonQuery();
+
+                        trans.Commit();
+                        cmd.Dispose();
+                        return true;
+                    }
+                    cmd.Transaction.Rollback();
+                    return false;
                 }
-                return false;
+                catch (MySqlException ex)
+                {
+                    try
+                    {
+                        trans.Rollback();
+                        return false;
+                    }
+                    catch (MySqlException ex1)
+                    {
+                        Console.WriteLine("Error: " + ex1.ToString());
+                        return false;
+                    }
+
+                    Console.WriteLine("Error: " + ex.ToString());
+
+                    return false;
+                }
+
             }
             else
             {
                 return false;
             }
         }
+        
 
         private bool isBalanceSmallerOrSameThanWithdrawal(int withdrawal, long cardNum)
         {
             double balance = 0;
             long balanceRoundedDown = 0;
-            String query = "SELECT balance FROM Accounts " +
+            string query = "SELECT balance FROM Accounts " +
                 "INNER JOIN Cards ON Accounts.idacc = Cards.idacc " +
                 "WHERE cardNumber LIKE " + cardNum;
             MySqlConnection conn = getConnection();
@@ -163,6 +220,27 @@ namespace AtmSoftware
                 return false;
             }
             return false;
+        }
+
+        public void changePin(long cardNum, int newPin)
+        {
+            
+            string query = "UPDATE Cards " +
+                    "SET pin = " + newPin +
+                    " WHERE cardNumber = " + cardNum;
+
+            try
+            {
+                MySqlCommand cmd = new MySqlCommand();
+                MySqlConnection conn = getConnection();
+                cmd = new MySqlCommand(query, conn);
+                cmd.ExecuteNonQuery();
+            }
+            catch (MySqlException ex)
+            {
+                Console.Write("Error: " + ex.ToString());
+            }
+
         }
 
 
