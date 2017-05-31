@@ -80,6 +80,7 @@ namespace AtmSoftware
                                 drawText("Výber z účtu", 15, 10, 5);
                                 drawText("Zostatok na účte", 15, 10, 85);
                                 drawText("Zmeniť pin", 15, 10, 165);
+                                drawText("Koniec", 15, 10, 250);
                                 saveImage("pinOKsvk.png");
                                 break;
                             }
@@ -156,6 +157,7 @@ namespace AtmSoftware
                                 drawText("Withdrawal", 15, 10, 5);
                                 drawText("Account balance", 15, 10, 85);
                                 drawText("Change pin", 15, 10, 165);
+                                drawText("Exit", 15, 10, 250);
                                 saveImage("pinOKeng.png");
                                 break;
                             }
@@ -247,18 +249,18 @@ namespace AtmSoftware
 
         private void button12_Click(object sender, EventArgs e)
         {
-           if(state == State.PIN && pin.Length < 4)
+            if (state == State.PIN && pin.Length < 4)
             {
                 pin = pin + "1";
                 hiddenPin += "*";
             }
             else if (state == State.CHANGEPIN && newPin.Length < 4)
             {
-                newPin = pin + "1";
+                newPin = newPin + "1";
                 hiddenPin += "*";
             }
             printScreen();
-            
+
         }
 
         private void button18_Click(object sender, EventArgs e)
@@ -392,7 +394,6 @@ namespace AtmSoftware
                 hiddenPin = "";
                 printScreen();
             }
-            Console.Write(pin + " ");
 
         }
 
@@ -438,6 +439,10 @@ namespace AtmSoftware
                     changePin();
                     printScreen();
                     break;
+                case State.PINWRONG:
+                    checkCard();
+                    printScreen();
+                    break;
             } 
 
         }
@@ -479,17 +484,35 @@ namespace AtmSoftware
 
         private void checkPinCode()
         {
-            int pinToInt = Convert.ToInt16(pin);
-            if (database.isPinCorrect(cardNumber, pinToInt))
+            if(pin != null)
             {
-                state = State.PINOK;
-                pin = "";
-                hiddenPin = "";
+                int pinToInt = Convert.ToInt16(pin);
+                if (database.isPinCorrect(cardNumber, pinToInt))
+                {
+                    database.findAndDeleteCardFromWrongPins(cardNumber);
+                    state = State.PINOK;
+                    pin = "";
+                    hiddenPin = "";
+                }
+                else
+                {
+                    database.changeWrongPinState(cardNumber);
+                    checkCard();
+                    pin = "";
+                    hiddenPin = "";
+                    state = State.PINWRONG;
+                    printScreen();
+                }
             }
             else
             {
-                //todo nespravny pin
-                MessageBox.Show("Wrong pin!");
+                database.changeWrongPinState(cardNumber);
+                checkCard();
+                pin = "";
+                hiddenPin = "";
+                state = State.PINWRONG;
+                printScreen();
+
             }
         }
 
@@ -508,6 +531,9 @@ namespace AtmSoftware
                 case State.SHOWBALANCE:
                     state = State.PINOK;
                     printScreen();
+                    break;
+                case State.PINOK:
+                    this.Dispose();
                     break;
                 
             }

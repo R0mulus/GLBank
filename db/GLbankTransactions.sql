@@ -43,5 +43,13 @@ CREATE TABLE Cards (idCard INT AUTO_INCREMENT,
 					ON UPDATE RESTRICT
 				    );
 							  
+CREATE TABLE WrongPins (idWrongPins INT AUTO_INCREMENT,
+						cardNumber BIGINT UNIQUE NOT NULL,
+						wrongPinCount INT NOT NULL,
+						PRIMARY KEY(idWrongPins),
+						FOREIGN KEY(cardNumber) REFERENCES Cards(cardNumber)
+						ON DELETE CASCADE
+						ON UPDATE RESTRICT
+						);	
 
 INSERT INTO Cards (cardNumber, idacc, pin) VALUES(7000600050004000,502330928,1111);							  

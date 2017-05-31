@@ -116,6 +116,143 @@ namespace AtmSoftware
             return false;
         }
 
+        public bool findAndDeleteCardFromWrongPins(long cardNum)
+        {
+            string query = "SELECT * FROM wrongPins " +
+                                "WHERE cardNumber = " + cardNum;
+
+            MySqlConnection conn = getConnection();
+            if (conn != null)
+            {
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    reader.Close();
+                    string queryDel = "DELETE FROM wrongPins " +
+                                        "WHERE cardNumber = " + cardNum;
+                    cmd = new MySqlCommand(queryDel, conn);
+                    cmd.ExecuteNonQuery();
+                    //cmd.Dispose();
+                    return true;
+                }
+                //cmd.Dispose();
+                reader.Close();
+                return false;
+            }
+            reader.Close();
+            return false;
+        }
+
+
+        private void insertFirstWrongPin(long cardNum)
+        {
+            string queryInsert = "INSERT INTO wrongpins (cardNumber, wrongPincount) " +
+                                "VALUES (" + cardNum + ", 1)";
+            
+            try
+            {
+                MySqlCommand cmd = new MySqlCommand();
+                MySqlConnection conn = getConnection();
+                cmd = new MySqlCommand(queryInsert, conn);
+                cmd.ExecuteNonQuery();
+                //cmd.Dispose();
+            }
+            catch (MySqlException exSql)
+            {
+                Console.Error.WriteLine("Error: " + exSql.StackTrace);
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine("Error: " + ex.StackTrace);
+            }
+
+        }
+
+        private void increaseWrongPins(long cardNum)
+        { 
+            string queryUpdate = "UPDATE wrongpins SET wrongPinCount = wrongPinCount + 1 " +
+                                "WHERE cardNumber = " + cardNum;
+
+            try
+            {
+                MySqlCommand cmd = new MySqlCommand();
+                MySqlConnection conn = getConnection();
+                cmd = new MySqlCommand(queryUpdate, conn);
+                cmd.ExecuteNonQuery();
+                //cmd.Dispose();
+            }
+            catch (MySqlException exSql)
+            {
+                Console.Error.WriteLine("Error: " + exSql.StackTrace);
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine("Error: " + ex.StackTrace);
+            }
+        }
+
+        public void changeWrongPinState(long cardNum)
+        {
+
+            int wrongPins = getWrongPins(cardNum);
+            try
+            {
+                if (wrongPins == 0)
+                {
+                    insertFirstWrongPin(cardNum);
+                }
+                else if (wrongPins == 1)
+                {
+                    increaseWrongPins(cardNum);
+                }
+                else
+                {
+                    increaseWrongPins(cardNum);
+                    blockCard(cardNum);
+                }
+            }
+            catch (MySqlException exSql)
+            {
+                Console.Error.WriteLine("Error: " + exSql.StackTrace);
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine("Error: " + ex.StackTrace);
+            }
+
+        }
+
+        public int getWrongPins(long cardNum)
+        {
+            int wrongPinCount = 0;
+            string query = "SELECT wrongPinCount FROM wrongPins WHERE cardNumber = " + cardNum;
+            
+            MySqlConnection conn = getConnection();
+            if (conn != null)
+            {
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                var str = cmd.ExecuteScalar();
+                wrongPinCount = Convert.ToInt32(str);
+                return wrongPinCount;
+            }
+            return wrongPinCount;
+        }
+
+        public void blockCard(long cardNum)
+        {
+            string query = "UPDATE Cards SET blocked = 'T' WHERE cardNumber = " + cardNum;
+
+            MySqlConnection conn = getConnection();
+
+            if (connection != null)
+            {
+                MySqlCommand cmd = new MySqlCommand();
+                cmd = new MySqlCommand(query, conn);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
         public float getBalance(long cardNum)
         {
             float balance = 0;
@@ -157,17 +294,14 @@ namespace AtmSoftware
                 {
                     if (conn != null)
                     {
-                        
-                        
                         trans = conn.BeginTransaction();
-                        
                         cmd = new MySqlCommand(query, conn);
                         cmd.ExecuteNonQuery();
                         cmd = new MySqlCommand(query2, conn);
                         cmd.ExecuteNonQuery();
 
                         trans.Commit();
-                        cmd.Dispose();
+                        //cmd.Dispose();
                         return true;
                     }
                     cmd.Transaction.Rollback();
@@ -182,11 +316,11 @@ namespace AtmSoftware
                     }
                     catch (MySqlException ex1)
                     {
-                        Console.WriteLine("Error: " + ex1.ToString());
+                        Console.Error.WriteLine("Error: " + ex1.ToString());
                         return false;
                     }
 
-                    Console.WriteLine("Error: " + ex.ToString());
+                    Console.Error.WriteLine("Error: " + ex.ToString());
 
                     return false;
                 }
@@ -238,7 +372,7 @@ namespace AtmSoftware
             }
             catch (MySqlException ex)
             {
-                Console.Write("Error: " + ex.ToString());
+                Console.Error.Write("Error: " + ex.ToString());
             }
 
         }
