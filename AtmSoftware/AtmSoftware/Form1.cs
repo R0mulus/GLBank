@@ -110,7 +110,8 @@ namespace AtmSoftware
                             {
                                 newCanvas();
                                 drawText("Zmena pin-u", 20, 85, 20);
-                                drawText("Novy pin: " + hiddenPin, 20, 80, 175);
+                                drawText("Nový pin: " + hiddenPin, 20, 80, 175);
+                                drawText("Späť", 15, 10, 250);
                                 saveImage("zmenaPinu.png");
                                 break;
                             }
@@ -188,6 +189,7 @@ namespace AtmSoftware
                                 newCanvas();
                                 drawText("Changing pin", 20, 85, 20);
                                 drawText("New pin: " + hiddenPin, 20, 80, 175);
+                                drawText("Back", 15, 10, 250);
                                 saveImage("zmenaPinuENG.png");
                                 break;
                             }
@@ -459,14 +461,6 @@ namespace AtmSoftware
 
         }
 
-        private void txtBoxMainPIN_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
-            {
-                e.Handled = true;
-            }
-        }
-
         private void checkCard()
         {
             if (database.isCardBlocked(cardNumber))
@@ -534,6 +528,10 @@ namespace AtmSoftware
                     break;
                 case State.PINOK:
                     this.Dispose();
+                    break;
+                case State.CHANGEPIN:
+                    state = State.PINOK;
+                    printScreen();
                     break;
                 
             }
