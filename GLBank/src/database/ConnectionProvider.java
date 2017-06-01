@@ -23,7 +23,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 /**
  *
- * @author Martin
+ * @author 
  */
 public class ConnectionProvider {
 
